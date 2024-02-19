@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import '../../controllers/events/selected_object_drawable_removed_event.dart';
 import '../../controllers/helpers/renderer_check/renderer_check.dart';
 import '../../controllers/drawables/drawable.dart';
@@ -36,6 +37,17 @@ typedef DrawableDeletedCallback = Function(Drawable drawable);
 /// Defines the builder used with [FlutterPainter.builder] constructor.
 typedef FlutterPainterBuilderCallback = Widget Function(
     BuildContext context, Widget painter);
+
+class MenuEntry {
+  final String label;
+  final MenuSerializableShortcut? shortcut;
+
+  const MenuEntry(this.label, [this.shortcut]);
+
+  static const copy = MenuEntry('Copy');
+  static const delete = MenuEntry('Delete');
+  static const edit = MenuEntry('Edit');
+}
 
 /// Widget that allows user to draw on it
 class FlutterPainter extends StatelessWidget {
