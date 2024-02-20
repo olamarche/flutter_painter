@@ -212,23 +212,24 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
                                         onPressed: () {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(const SnackBar(
-                                            content: Text("Delete"),
+                                            content: Text("Raise Top"),
                                           ));
                                         },
-                                        child: Text(MenuEntry.delete.label),
+                                        child: Text(MenuEntry.raise_top.label),
                                       ),
                                     ),
                                     MenuItemButton(
                                       onPressed: () {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(const SnackBar(
-                                          content: Text("Edit"),
+                                          content: Text("Lower Bottom"),
                                         ));
                                       },
                                       child: Padding(
                                         padding:
                                             const EdgeInsets.only(left: 4.0),
-                                        child: Text(MenuEntry.edit.label),
+                                        child:
+                                            Text(MenuEntry.lower_bottom.label),
                                       ),
                                     ),
                                   ],
@@ -984,6 +985,23 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
 
   /// Copy Drawable.
   void copyDrawable(MapEntry<int, ObjectDrawable> entry,
+      {bool newAction = true}) {
+    final index = entry.key;
+    final drawable = entry.value;
+    if (index < 0) return;
+
+    final newDrawable = drawable.copyWith(
+      position: center,
+    );
+
+    setState(() {
+      PainterController.of(context)
+          .addDrawables([newDrawable], newAction: newAction);
+    });
+  }
+
+  /// Copy Drawable.
+  void rearrangeLayerDrawable(MapEntry<int, ObjectDrawable> entry,
       {bool newAction = false}) {
     final index = entry.key;
     final drawable = entry.value;

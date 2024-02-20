@@ -45,8 +45,8 @@ class MenuEntry {
   const MenuEntry(this.label, [this.shortcut]);
 
   static const copy = MenuEntry('Copy');
-  static const delete = MenuEntry('Delete');
-  static const edit = MenuEntry('Edit');
+  static const raise_top = MenuEntry('Raise Top');
+  static const lower_bottom = MenuEntry('Lower Bottom');
 }
 
 /// Widget that allows user to draw on it
