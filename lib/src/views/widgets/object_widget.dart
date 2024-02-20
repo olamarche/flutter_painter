@@ -196,10 +196,7 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
                                         ),
                                       ),
                                       onPressed: () {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(const SnackBar(
-                                          content: Text("Copy"),
-                                        ));
+                                        copyDrawable(entry);
                                       },
                                     ),
                                     Container(
@@ -982,6 +979,23 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
     setState(() {
       PainterController.of(context)
           .replaceDrawable(oldDrawable, newDrawable, newAction: newAction);
+    });
+  }
+
+  /// Copy Drawable.
+  void copyDrawable(MapEntry<int, ObjectDrawable> entry,
+      {bool newAction = false}) {
+    final index = entry.key;
+    final drawable = entry.value;
+    if (index < 0) return;
+
+    final newDrawable = drawable.copyWith(
+      position: center,
+    );
+
+    setState(() {
+      PainterController.of(context)
+          .addDrawables([newDrawable], newAction: newAction);
     });
   }
 
