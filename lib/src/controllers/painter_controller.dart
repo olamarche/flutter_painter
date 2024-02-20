@@ -4,6 +4,8 @@ import 'dart:ui' as ui;
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_painter/src/controllers/actions/lower_bottom_drawable_action.dart';
+import 'package:flutter_painter/src/controllers/actions/raise_top_drawable_action.dart';
 import 'events/selected_object_drawable_removed_event.dart';
 import '../views/widgets/painter_controller_widget.dart';
 import 'actions/actions.dart';
@@ -213,6 +215,20 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
     final action = MergeDrawablesAction();
     action.perform(this);
     _addAction(action, newAction);
+  }
+
+  bool raiseTopDrawable(Drawable drawable, {bool newAction = true}) {
+    final action = RaiseTopDrawablesAction(drawable);
+    final value = action.perform(this);
+    _addAction(action, newAction);
+    return value;
+  }
+
+  bool lowerBottomDrawable(Drawable drawable, {bool newAction = true}) {
+    final action = LowerBottomDrawablesAction(drawable);
+    final value = action.perform(this);
+    _addAction(action, newAction);
+    return value;
   }
 
   void _addAction(ControllerAction action, bool newAction) {

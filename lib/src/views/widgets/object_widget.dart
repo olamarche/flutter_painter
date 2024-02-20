@@ -210,20 +210,14 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
                                       ),
                                       child: MenuItemButton(
                                         onPressed: () {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(const SnackBar(
-                                            content: Text("Raise Top"),
-                                          ));
+                                          raiseTopDrawable(entry);
                                         },
                                         child: Text(MenuEntry.raise_top.label),
                                       ),
                                     ),
                                     MenuItemButton(
                                       onPressed: () {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(const SnackBar(
-                                          content: Text("Lower Bottom"),
-                                        ));
+                                        lowerBottomDrawable(entry);
                                       },
                                       child: Padding(
                                         padding:
@@ -241,6 +235,7 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
                                   behavior: HitTestBehavior.opaque,
                                   onTap: () => tapDrawable(drawable),
                                   onLongPress: () {
+                                    onLongPressDrawable(drawable);
                                     if (controller.isOpen) {
                                       controller.close();
                                     } else {
@@ -712,6 +707,15 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
     });
   }
 
+  void onLongPressDrawable(ObjectDrawable drawable) {
+    if (drawable.locked) return;
+
+    setState(() {
+      // selectedDrawableIndex = drawables.indexOf(drawable);
+      controller?.selectObjectDrawable(drawable);
+    });
+  }
+
   /// Callback when the object drawable starts being moved, scaled and/or rotated.
   ///
   /// Saves the initial point of interaction and drawable to be used on update events.
@@ -1000,20 +1004,29 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
     });
   }
 
-  /// Copy Drawable.
-  void rearrangeLayerDrawable(MapEntry<int, ObjectDrawable> entry,
-      {bool newAction = false}) {
+  /// Rearrange Raise Top Drawable.
+  void raiseTopDrawable(MapEntry<int, ObjectDrawable> entry,
+      {bool newAction = true}) {
     final index = entry.key;
     final drawable = entry.value;
-    if (index < 0) return;
-
-    final newDrawable = drawable.copyWith(
-      position: center,
-    );
+    if (index < 0 || index == drawables.length - 1) return;
 
     setState(() {
       PainterController.of(context)
-          .addDrawables([newDrawable], newAction: newAction);
+          .raiseTopDrawable(drawable, newAction: newAction);
+    });
+  }
+
+  /// Rearrange Raise Top Drawable.
+  void lowerBottomDrawable(MapEntry<int, ObjectDrawable> entry,
+      {bool newAction = true}) {
+    final index = entry.key;
+    final drawable = entry.value;
+    if (index <= 0) return;
+
+    setState(() {
+      PainterController.of(context)
+          .lowerBottomDrawable(drawable, newAction: newAction);
     });
   }
 
