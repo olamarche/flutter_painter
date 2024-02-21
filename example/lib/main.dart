@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
@@ -294,6 +293,56 @@ class _FlutterPainterExampleState extends State<FlutterPainterExample> {
                                   ),
                                 ],
                               ),
+
+                              Row(
+                                children: [
+                                  const Expanded(
+                                      flex: 1, child: Text("Text Align")),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Row(
+                                      children: [
+                                        TextAlignButton(
+                                          icon: const Icon(
+                                            Icons.format_align_left,
+                                            color: Colors.black,
+                                          ),
+                                          selected: controller.textAlign,
+                                          textAlign: TextAlign.left,
+                                          onChanged: setTextAlign,
+                                        ),
+                                        TextAlignButton(
+                                          icon: const Icon(
+                                            Icons.format_align_right,
+                                            color: Colors.black,
+                                          ),
+                                          selected: controller.textAlign,
+                                          textAlign: TextAlign.right,
+                                          onChanged: setTextAlign,
+                                        ),
+                                        TextAlignButton(
+                                          icon: const Icon(
+                                            Icons.format_align_center,
+                                            color: Colors.black,
+                                          ),
+                                          selected: controller.textAlign,
+                                          textAlign: TextAlign.center,
+                                          onChanged: setTextAlign,
+                                        ),
+                                        TextAlignButton(
+                                          icon: const Icon(
+                                            Icons.format_align_justify,
+                                            color: Colors.black,
+                                          ),
+                                          selected: controller.textAlign,
+                                          textAlign: TextAlign.justify,
+                                          onChanged: setTextAlign,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                             if (controller.shapeFactory != null) ...[
                               const Divider(),
@@ -563,6 +612,10 @@ class _FlutterPainterExampleState extends State<FlutterPainterExample> {
         .copyWith(color: HSVColor.fromAHSV(1, hue, 1, 1).toColor());
   }
 
+  void setTextAlign(TextAlign textAlign) {
+    controller.textAlign = textAlign;
+  }
+
   void selectShape(ShapeFactory? factory) {
     controller.shapeFactory = factory;
   }
@@ -603,6 +656,38 @@ class _FlutterPainterExampleState extends State<FlutterPainterExample> {
 
     controller.replaceDrawable(
         imageDrawable, imageDrawable.copyWith(flipped: !imageDrawable.flipped));
+  }
+}
+
+class TextAlignButton extends StatelessWidget {
+  const TextAlignButton({
+    Key? key,
+    required this.icon,
+    required this.selected,
+    required this.textAlign,
+    required this.onChanged,
+  }) : super(key: key);
+  final Icon icon;
+  final TextAlign selected;
+  final TextAlign textAlign;
+  final void Function(TextAlign) onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () => onChanged(textAlign),
+      child: icon,
+      style: ElevatedButton.styleFrom(
+        elevation: 0.0,
+        backgroundColor:
+            selected == textAlign ? Colors.grey.shade300 : Colors.white,
+        minimumSize: Size.zero,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8,
+          vertical: 4,
+        ),
+      ),
+    );
   }
 }
 

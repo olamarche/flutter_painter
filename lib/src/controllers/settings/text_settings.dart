@@ -6,6 +6,9 @@ class TextSettings {
   /// The text style to be used.
   final TextStyle textStyle;
 
+  /// The text align to be used.
+  final TextAlign textAlign;
+
   /// Focus node used to edit text.
   /// This focus node will be listened to by the UI to determine user input.
   ///
@@ -19,13 +22,16 @@ class TextSettings {
       fontSize: 14,
       color: Colors.black,
     ),
+    this.textAlign = TextAlign.center,
     this.focusNode,
   });
 
   /// Creates a copy of this but with the given fields replaced with the new values.
-  TextSettings copyWith({TextStyle? textStyle, FocusNode? focusNode}) {
+  TextSettings copyWith(
+      {TextStyle? textStyle, TextAlign? textAlign, FocusNode? focusNode}) {
     return TextSettings(
         textStyle: textStyle ?? this.textStyle,
+        textAlign: textAlign ?? this.textAlign,
         focusNode: focusNode ?? this.focusNode);
   }
 }

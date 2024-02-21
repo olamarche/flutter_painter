@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import 'object_drawable.dart';
@@ -14,6 +12,9 @@ class TextDrawable extends ObjectDrawable {
 
   /// The direction of the text to be drawn.
   final TextDirection direction;
+
+  /// The align of the text.
+  final TextAlign textAlign;
 
   // A text painter which will paint the text on the canvas.
   final TextPainter textPainter;
@@ -31,12 +32,13 @@ class TextDrawable extends ObjectDrawable {
       color: Colors.black,
     ),
     this.direction = TextDirection.ltr,
+    this.textAlign = TextAlign.center,
     bool locked = false,
     bool hidden = false,
     Set<ObjectDrawableAssist> assists = const <ObjectDrawableAssist>{},
   })  : textPainter = TextPainter(
           text: TextSpan(text: text, style: style),
-          textAlign: TextAlign.center,
+          textAlign: textAlign,
           textScaleFactor: scale,
           textDirection: direction,
         ),
@@ -53,6 +55,7 @@ class TextDrawable extends ObjectDrawable {
   void drawObject(Canvas canvas, Size size) {
     // Render the text according to the size of the canvas taking the scale in mind
     textPainter.layout(maxWidth: size.width * scale);
+    // textPainter.layout(maxWidth: size.width * scale, textAlign: textAlign);
 
     // Paint the text on the canvas
     // It is shifted back by half of its width and height to be drawn in the center
@@ -72,6 +75,7 @@ class TextDrawable extends ObjectDrawable {
     TextStyle? style,
     bool? locked,
     TextDirection? direction,
+    TextAlign? textAlign,
   }) {
     return TextDrawable(
       text: text ?? this.text,
@@ -80,6 +84,7 @@ class TextDrawable extends ObjectDrawable {
       scale: scale ?? this.scale,
       style: style ?? this.style,
       direction: direction ?? this.direction,
+      textAlign: textAlign ?? this.textAlign,
       assists: assists ?? this.assists,
       hidden: hidden ?? this.hidden,
       locked: locked ?? this.locked,

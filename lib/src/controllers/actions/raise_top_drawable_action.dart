@@ -4,8 +4,6 @@ import '../drawables/drawable.dart';
 
 import '../painter_controller.dart';
 import 'action.dart';
-import 'add_drawables_action.dart';
-import 'insert_drawables_action.dart';
 
 class RaiseTopDrawablesAction extends ControllerAction<bool, bool> {
   final Drawable drawable;
