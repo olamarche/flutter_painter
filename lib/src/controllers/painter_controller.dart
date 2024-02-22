@@ -17,6 +17,8 @@ import 'drawables/image_drawable.dart';
 import 'events/events.dart';
 import 'drawables/background/background_drawable.dart';
 import 'drawables/object_drawable.dart';
+import 'events/turn_on_multiselect_event.dart';
+import 'notifications/notifications.dart';
 import 'settings/settings.dart';
 import '../views/painters/painter.dart';
 
@@ -389,28 +391,18 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
     selectObjectDrawable(null);
   }
 
-  List<ObjectDrawable>? get selectedDrawables => value.selectedDrawables;
-
-  void selectedMultiDrawables(ObjectDrawable drawable,
-      {bool newAction = true}) {
-    List<ObjectDrawable> sltDrawables = selectedDrawables ?? [];
-
-    if (sltDrawables.contains(drawable)) {
-      removeSelectedDrawables(drawable, newAction: newAction);
-    } else {
-      addSelectedDrawables(drawable, newAction: newAction);
-    }
-  }
+  // List<ObjectDrawable> get selectedDrawables => value.selectedDrawables;
 
   void addSelectedDrawables(ObjectDrawable drawable, {bool newAction = true}) {
-    final action = AddSelectedDrawablesAction(drawable);
+    final action = AddSelectedDrawablesAction(drawable, _eventsSteamController);
     action.perform(this);
     _addAction(action, newAction);
   }
 
   void removeSelectedDrawables(ObjectDrawable drawable,
       {bool newAction = true}) {
-    final action = RemoveSelectedDrawablesAction(drawable);
+    final action =
+        RemoveSelectedDrawablesAction(drawable, _eventsSteamController);
     action.perform(this);
     _addAction(action, newAction);
   }
@@ -430,9 +422,6 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
   }
 
   void turOffMultiselect() {
-    if (isMultiselect == true) {
-      _eventsSteamController.add(const TurnOffMultiselectEvent());
-    }
     value = value.copyWith(
       isMultiselect: false,
     );

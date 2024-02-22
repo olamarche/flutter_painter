@@ -1,23 +1,25 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter_painter/src/controllers/events/selected_drawables_removed_event.dart';
 
 import '../drawables/object_drawable.dart';
 
+import '../events/events.dart';
 import '../painter_controller.dart';
 import 'action.dart';
 
 class AddSelectedDrawablesAction extends ControllerAction<bool, bool> {
   final ObjectDrawable drawable;
+  final StreamController<PainterEvent> eventsSteamController;
 
-  AddSelectedDrawablesAction(this.drawable);
+  AddSelectedDrawablesAction(this.drawable, this.eventsSteamController);
 
   @protected
   @override
   bool perform$(PainterController controller) {
-    ///
-    ///isMultiselect
-    ///
     final value = controller.value;
-    List<ObjectDrawable>? currentSelectedDrawables = value.selectedDrawables;
+    List<ObjectDrawable> currentSelectedDrawables = value.selectedDrawables;
     currentSelectedDrawables.add(drawable);
     controller.value =
         value.copyWith(selectedDrawables: currentSelectedDrawables);
@@ -29,11 +31,16 @@ class AddSelectedDrawablesAction extends ControllerAction<bool, bool> {
   @override
   bool unperform$(PainterController controller) {
     final value = controller.value;
-    List<ObjectDrawable>? currentSelectedDrawables = value.selectedDrawables;
-    final index = currentSelectedDrawables.lastIndexOf(drawable);
-    currentSelectedDrawables.removeAt(index);
+    List<ObjectDrawable> currentSelectedDrawables = value.selectedDrawables;
+
+    debugPrint('currentSelectedDrawables: ${currentSelectedDrawables.length}');
+    currentSelectedDrawables.removeLast();
+
     controller.value =
         value.copyWith(selectedDrawables: currentSelectedDrawables);
+    debugPrint(
+        'after removeLast: ${controller.value.selectedDrawables.length}');
+    eventsSteamController.add(const SelectedDrawablesRemovedEvent());
 
     return true;
   }

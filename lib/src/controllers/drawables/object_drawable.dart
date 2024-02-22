@@ -142,16 +142,17 @@ abstract class ObjectDrawable extends Drawable {
   Size getSize({double minWidth = 0.0, double maxWidth = double.infinity});
 
   /// Compares two [ObjectDrawable]s for equality.
-  // @override
-  // bool operator ==(Object other) {
-  //   return other is ObjectDrawable &&
-  //       super == other &&
-  //       other.position == position &&
-  //       other.rotationAngle == rotationAngle &&
-  //       other.scale == scale &&
-  //       SetEquality().equals(other.assists, assists) &&
-  //       MapEquality().equals(other.assistPaints, assistPaints);
-  // }
+  @override
+  bool operator ==(Object other) {
+    return other is ObjectDrawable &&
+        super == other &&
+        other.position == position &&
+        other.rotationAngle == rotationAngle &&
+        other.scale == scale;
+    // &&
+    // SetEquality().equals(other.assists, assists) &&
+    // MapEquality().equals(other.assistPaints, assistPaints);
+  }
 
   /// Creates a copy of this but with the given fields replaced with the new values.
   ///
