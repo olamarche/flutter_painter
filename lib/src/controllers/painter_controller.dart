@@ -4,8 +4,12 @@ import 'dart:ui' as ui;
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_painter/src/controllers/actions/add_selected_drawables_action.dart';
 import 'package:flutter_painter/src/controllers/actions/lower_bottom_drawable_action.dart';
 import 'package:flutter_painter/src/controllers/actions/raise_top_drawable_action.dart';
+import 'package:flutter_painter/src/controllers/actions/remove_selected_drawables_action.dart';
+import 'package:flutter_painter/src/controllers/events/turn_off_multiselect_event.dart';
+import 'actions/clear_selected_drawables_action.dart';
 import 'events/selected_object_drawable_removed_event.dart';
 import '../views/widgets/painter_controller_widget.dart';
 import 'actions/actions.dart';
@@ -384,6 +388,55 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
     }
     selectObjectDrawable(null);
   }
+
+  List<ObjectDrawable>? get selectedDrawables => value.selectedDrawables;
+
+  void selectedMultiDrawables(ObjectDrawable drawable,
+      {bool newAction = true}) {
+    List<ObjectDrawable> sltDrawables = selectedDrawables ?? [];
+
+    if (sltDrawables.contains(drawable)) {
+      removeSelectedDrawables(drawable, newAction: newAction);
+    } else {
+      addSelectedDrawables(drawable, newAction: newAction);
+    }
+  }
+
+  void addSelectedDrawables(ObjectDrawable drawable, {bool newAction = true}) {
+    final action = AddSelectedDrawablesAction(drawable);
+    action.perform(this);
+    _addAction(action, newAction);
+  }
+
+  void removeSelectedDrawables(ObjectDrawable drawable,
+      {bool newAction = true}) {
+    final action = RemoveSelectedDrawablesAction(drawable);
+    action.perform(this);
+    _addAction(action, newAction);
+  }
+
+  void clearSelectedDrawables({bool newAction = true}) {
+    final action = ClearSelectedDrawablesAction();
+    action.perform(this);
+    _addAction(action, newAction);
+  }
+
+  bool? get isMultiselect => value.isMultiselect;
+
+  void turnOnMultiselect() {
+    value = value.copyWith(
+      isMultiselect: true,
+    );
+  }
+
+  void turOffMultiselect() {
+    if (isMultiselect == true) {
+      _eventsSteamController.add(const TurnOffMultiselectEvent());
+    }
+    value = value.copyWith(
+      isMultiselect: false,
+    );
+  }
 }
 
 /// The current paint mode, drawables and background values of a [FlutterPainter] widget.
@@ -401,6 +454,9 @@ class PainterControllerValue {
   /// The currently selected object drawable.
   final ObjectDrawable? selectedObjectDrawable;
 
+  final List<ObjectDrawable> selectedDrawables;
+  final bool isMultiselect;
+
   /// Creates a new [PainterControllerValue] with the provided [settings] and [background].
   ///
   /// The user can pass a list of initial [drawables] which will be drawn without user interaction.
@@ -409,6 +465,8 @@ class PainterControllerValue {
     List<Drawable> drawables = const [],
     this.background,
     this.selectedObjectDrawable,
+    this.selectedDrawables = const [],
+    this.isMultiselect = false,
   }) : _drawables = drawables;
 
   /// Getter for the current drawables.
@@ -424,6 +482,8 @@ class PainterControllerValue {
         _NoBackgroundPassedBackgroundDrawable.instance,
     ObjectDrawable? selectedObjectDrawable =
         _NoObjectPassedBackgroundDrawable.instance,
+    List<ObjectDrawable>? selectedDrawables,
+    bool? isMultiselect,
   }) {
     return PainterControllerValue(
       settings: settings ?? this.settings,
@@ -435,6 +495,8 @@ class PainterControllerValue {
           selectedObjectDrawable == _NoObjectPassedBackgroundDrawable.instance
               ? this.selectedObjectDrawable
               : selectedObjectDrawable,
+      selectedDrawables: selectedDrawables ?? this.selectedDrawables,
+      isMultiselect: isMultiselect ?? this.isMultiselect,
     );
   }
 
@@ -445,12 +507,22 @@ class PainterControllerValue {
         (const ListEquality().equals(_drawables, other._drawables) &&
             background == other.background &&
             settings == other.settings &&
-            selectedObjectDrawable == other.selectedObjectDrawable);
+            selectedObjectDrawable == other.selectedObjectDrawable &&
+            selectedDrawables == other.selectedDrawables &&
+            isMultiselect == other.isMultiselect);
   }
 
   @override
+  // ignore: deprecated_member_use
   int get hashCode => hashValues(
-      hashList(_drawables), background, settings, selectedObjectDrawable);
+      // ignore: deprecated_member_use
+      hashList(_drawables),
+      background,
+      settings,
+      selectedObjectDrawable,
+      // ignore: deprecated_member_use
+      hashList(selectedDrawables),
+      isMultiselect);
 }
 
 /// Private class that is used internally to represent no

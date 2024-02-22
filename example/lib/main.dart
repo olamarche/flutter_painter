@@ -151,6 +151,32 @@ class _FlutterPainterExampleState extends State<FlutterPainterExample> {
                           ? flipSelectedImageDrawable
                           : null,
                     ),
+                    //
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                      ),
+                      // padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        child: const Icon(
+                          Icons.layers_outlined,
+                          color: Colors.black54,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0.0,
+                          backgroundColor: controller.isMultiselect == true
+                              ? Colors.white60
+                              : null,
+                          minimumSize: Size.zero,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                          ),
+                        ),
+                        onPressed: controller.isMultiselect == true
+                            ? controller.turOffMultiselect
+                            : controller.turnOnMultiselect,
+                      ),
+                    ),
                     // Redo action
                     IconButton(
                       icon: const Icon(

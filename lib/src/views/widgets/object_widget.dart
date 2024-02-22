@@ -94,6 +94,9 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
       .whereType<ObjectDrawable>()
       .toList();
 
+  List<ObjectDrawable> get selectedDrawables =>
+      PainterController.of(context).value.selectedDrawables;
+
   /// A flag on whether to cancel controls animation or not.
   /// This is used to cancel the animation after the selected object
   /// drawable is deleted.
@@ -148,7 +151,9 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
                   onTap: onBackgroundTapped, child: widget.child)),
           ...drawables.asMap().entries.map((entry) {
             final drawable = entry.value;
-            final selected = drawable == controller?.selectedObjectDrawable;
+
+            final selected = drawable == controller?.selectedObjectDrawable ||
+                selectedDrawables.contains(drawable);
             final size = drawable.getSize(maxWidth: constraints.maxWidth);
             final widget = Padding(
               padding: EdgeInsets.all(objectPadding),
@@ -684,8 +689,11 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
     SelectedObjectDrawableUpdatedNotification(null).dispatch(context);
 
     setState(() {
-      // selectedDrawableIndex = null;
-      controller?.deselectObjectDrawable();
+      if (controller?.isMultiselect == true) {
+        controller?.clearSelectedDrawables();
+      } else {
+        controller?.deselectObjectDrawable();
+      }
     });
   }
 
@@ -694,17 +702,29 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
   /// Dispatches an [ObjectDrawableNotification] that the object was tapped.
   void tapDrawable(ObjectDrawable drawable) {
     if (drawable.locked) return;
+    if (controller?.isMultiselect == false) {
+      if (controller?.selectedObjectDrawable == drawable) {
+        ObjectDrawableReselectedNotification(drawable).dispatch(context);
+      } else {
+        SelectedObjectDrawableUpdatedNotification(drawable).dispatch(context);
+      }
 
-    if (controller?.selectedObjectDrawable == drawable) {
-      ObjectDrawableReselectedNotification(drawable).dispatch(context);
+      setState(() {
+        controller?.selectObjectDrawable(drawable);
+        controller?.clearSelectedDrawables();
+      });
     } else {
-      SelectedObjectDrawableUpdatedNotification(drawable).dispatch(context);
+      ObjectDrawable? selected = controller?.selectedObjectDrawable;
+      if (selected != null) {
+        setState(() {
+          controller?.selectedMultiDrawables(selected);
+          controller?.deselectObjectDrawable(isRemoved: true);
+        });
+      }
+      setState(() {
+        controller?.selectedMultiDrawables(drawable);
+      });
     }
-
-    setState(() {
-      // selectedDrawableIndex = drawables.indexOf(drawable);
-      controller?.selectObjectDrawable(drawable);
-    });
   }
 
   void onLongPressDrawable(ObjectDrawable drawable) {
