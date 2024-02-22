@@ -94,7 +94,8 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
       .whereType<ObjectDrawable>()
       .toList();
 
-  List<ObjectDrawable> selectedDrawables = [];
+  List<ObjectDrawable> get selectedDrawables =>
+      PainterController.of(context).value.selectedDrawables;
 
   /// A flag on whether to cancel controls animation or not.
   /// This is used to cancel the animation after the selected object
@@ -114,13 +115,6 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
         if (event is SelectedObjectDrawableRemovedEvent) {
           setState(() {
             cancelControlsAnimation = true;
-          });
-        }
-        if (event is SelectedDrawablesRemovedEvent ||
-            event is TurnOnMultiselectEvent) {
-          setState(() {
-            selectedDrawables =
-                PainterController.of(context).value.selectedDrawables;
           });
         }
       });
@@ -149,7 +143,6 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
   @override
   Widget build(BuildContext context) {
     final drawables = this.drawables;
-    selectedDrawables = PainterController.of(context).value.selectedDrawables;
     return LayoutBuilder(builder: (context, constraints) {
       return Stack(
         children: [
@@ -158,9 +151,9 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
                   onTap: onBackgroundTapped, child: widget.child)),
           ...drawables.asMap().entries.map((entry) {
             final drawable = entry.value;
-            bool selected = drawable == controller?.selectedObjectDrawable ||
-                selectedDrawables.contains(drawable);
 
+            final selected = drawable == controller?.selectedObjectDrawable ||
+                selectedDrawables.contains(drawable);
             final size = drawable.getSize(maxWidth: constraints.maxWidth);
             final widget = Padding(
               padding: EdgeInsets.all(objectPadding),
@@ -696,8 +689,11 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
     SelectedObjectDrawableUpdatedNotification(null).dispatch(context);
 
     setState(() {
-      controller?.clearSelectedDrawables();
-      controller?.deselectObjectDrawable();
+      if (controller?.isMultiselect == true) {
+        controller?.clearSelectedDrawables();
+      } else {
+        controller?.deselectObjectDrawable();
+      }
     });
   }
 
@@ -721,26 +717,12 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
       ObjectDrawable? selected = controller?.selectedObjectDrawable;
       if (selected != null) {
         setState(() {
-          selectedMultiDrawables(selected, newAction: true);
-          controller?.deselectObjectDrawable(isRemoved: false);
+          controller?.selectedMultiDrawables(selected);
+          controller?.deselectObjectDrawable(isRemoved: true);
         });
       }
-      SelectedObjectDrawableUpdatedNotification(null).dispatch(context);
       setState(() {
-        selectedMultiDrawables(drawable, newAction: true);
-      });
-    }
-  }
-
-  void selectedMultiDrawables(ObjectDrawable drawable,
-      {bool newAction = true}) {
-    if (selectedDrawables.contains(drawable)) {
-      setState(() {
-        controller?.removeSelectedDrawables(drawable, newAction: newAction);
-      });
-    } else {
-      setState(() {
-        controller?.addSelectedDrawables(drawable, newAction: newAction);
+        controller?.selectedMultiDrawables(drawable);
       });
     }
   }
