@@ -10,6 +10,8 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 void main() => runApp(const MyApp());
 
+enum AlignItem { left, center, right }
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -177,6 +179,51 @@ class _FlutterPainterExampleState extends State<FlutterPainterExample> {
                             : controller.turnOnMultiselect,
                       ),
                     ),
+                    controller.selectedDrawables.isNotEmpty
+                        ? PopupMenuButton<AlignItem>(
+                            icon: const Icon(
+                              Icons.align_horizontal_center,
+                            ),
+                            offset: const Offset(0, 54),
+                            onSelected: (AlignItem item) {
+                              switch (item) {
+                                case AlignItem.left:
+                                  controller.alignLeftDrawables();
+                                  break;
+                                case AlignItem.center:
+                                  controller.alignCenterDrawables();
+                                  break;
+                                case AlignItem.right:
+                                  controller.alignRighrDrawables();
+                                  break;
+                              }
+                            },
+                            itemBuilder: (BuildContext context) =>
+                                <PopupMenuEntry<AlignItem>>[
+                              const PopupMenuItem<AlignItem>(
+                                value: AlignItem.left,
+                                child: ListTile(
+                                  leading: Icon(Icons.align_horizontal_left),
+                                  title: Text('Align left'),
+                                ),
+                              ),
+                              const PopupMenuItem<AlignItem>(
+                                value: AlignItem.center,
+                                child: ListTile(
+                                  leading: Icon(Icons.align_horizontal_center),
+                                  title: Text('Align center'),
+                                ),
+                              ),
+                              const PopupMenuItem<AlignItem>(
+                                value: AlignItem.right,
+                                child: ListTile(
+                                  leading: Icon(Icons.align_horizontal_right),
+                                  title: Text('Align right'),
+                                ),
+                              ),
+                            ],
+                          )
+                        : const SizedBox(),
                     // Redo action
                     IconButton(
                       icon: const Icon(

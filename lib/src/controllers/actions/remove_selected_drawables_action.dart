@@ -19,10 +19,6 @@ class RemoveSelectedDrawablesAction extends ControllerAction<bool, bool> {
     final index = currentSelectedDrawables.indexOf(drawable);
     if (index < 0) return false;
 
-    ///
-    ///isMultiselect
-    ///
-
     currentSelectedDrawables.removeAt(index);
     _removedIndex = index;
     controller.value = value.copyWith(

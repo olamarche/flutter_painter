@@ -151,7 +151,6 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
                   onTap: onBackgroundTapped, child: widget.child)),
           ...drawables.asMap().entries.map((entry) {
             final drawable = entry.value;
-
             final selected = drawable == controller?.selectedObjectDrawable ||
                 selectedDrawables.contains(drawable);
             final size = drawable.getSize(maxWidth: constraints.maxWidth);
@@ -689,11 +688,8 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
     SelectedObjectDrawableUpdatedNotification(null).dispatch(context);
 
     setState(() {
-      if (controller?.isMultiselect == true) {
-        controller?.clearSelectedDrawables();
-      } else {
-        controller?.deselectObjectDrawable();
-      }
+      controller?.clearSelectedDrawables();
+      controller?.deselectObjectDrawable();
     });
   }
 

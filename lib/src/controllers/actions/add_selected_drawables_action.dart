@@ -17,7 +17,8 @@ class AddSelectedDrawablesAction extends ControllerAction<bool, bool> {
     ///isMultiselect
     ///
     final value = controller.value;
-    List<ObjectDrawable>? currentSelectedDrawables = value.selectedDrawables;
+    List<ObjectDrawable> currentSelectedDrawables =
+        List<ObjectDrawable>.from(value.selectedDrawables);
     currentSelectedDrawables.add(drawable);
     controller.value =
         value.copyWith(selectedDrawables: currentSelectedDrawables);

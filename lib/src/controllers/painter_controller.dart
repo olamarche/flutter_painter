@@ -5,6 +5,9 @@ import 'dart:ui' as ui;
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_painter/src/controllers/actions/add_selected_drawables_action.dart';
+import 'package:flutter_painter/src/controllers/actions/align_center_drawables_action.dart';
+import 'package:flutter_painter/src/controllers/actions/align_left_drawables_action.dart';
+import 'package:flutter_painter/src/controllers/actions/align_right_drawables_action.dart';
 import 'package:flutter_painter/src/controllers/actions/lower_bottom_drawable_action.dart';
 import 'package:flutter_painter/src/controllers/actions/raise_top_drawable_action.dart';
 import 'package:flutter_painter/src/controllers/actions/remove_selected_drawables_action.dart';
@@ -389,7 +392,7 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
     selectObjectDrawable(null);
   }
 
-  List<ObjectDrawable>? get selectedDrawables => value.selectedDrawables;
+  List<ObjectDrawable> get selectedDrawables => value.selectedDrawables;
 
   void selectedMultiDrawables(ObjectDrawable drawable,
       {bool newAction = true}) {
@@ -437,6 +440,36 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
       isMultiselect: false,
     );
   }
+
+  void alignLeftDrawables({bool newAction = true}) {
+    if (selectedDrawables.isNotEmpty) {
+      final action = AlignLeftDrawablesAction();
+      action.perform(this);
+      _addAction(action, newAction);
+    }
+  }
+
+  void alignCenterDrawables({bool newAction = true}) {
+    if (selectedDrawables.isNotEmpty) {
+      final action = AlignCenterDrawablesAction();
+      action.perform(this);
+      _addAction(action, newAction);
+    }
+  }
+
+  void alignRighrDrawables({bool newAction = true}) {
+    if (selectedDrawables.isNotEmpty) {
+      final action = AlignRightDrawablesAction();
+      action.perform(this);
+      _addAction(action, newAction);
+    }
+  }
+}
+
+enum DrawablesAlign {
+  left,
+  right,
+  center,
 }
 
 /// The current paint mode, drawables and background values of a [FlutterPainter] widget.
@@ -515,14 +548,15 @@ class PainterControllerValue {
   @override
   // ignore: deprecated_member_use
   int get hashCode => hashValues(
-      // ignore: deprecated_member_use
-      hashList(_drawables),
-      background,
-      settings,
-      selectedObjectDrawable,
-      // ignore: deprecated_member_use
-      hashList(selectedDrawables),
-      isMultiselect);
+        // ignore: deprecated_member_use
+        hashList(_drawables),
+        background,
+        settings,
+        selectedObjectDrawable,
+        // ignore: deprecated_member_use
+        hashList(selectedDrawables),
+        isMultiselect,
+      );
 }
 
 /// Private class that is used internally to represent no
