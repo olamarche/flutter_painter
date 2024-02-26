@@ -5,8 +5,6 @@ import 'dart:ui' as ui;
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_painter/src/controllers/actions/add_selected_drawables_action.dart';
-import 'package:flutter_painter/src/controllers/actions/align_center_drawables_action.dart';
-import 'package:flutter_painter/src/controllers/actions/align_right_drawables_action.dart';
 import 'package:flutter_painter/src/controllers/actions/distribute_horizontal_spacing_drawables_action.dart';
 import 'package:flutter_painter/src/controllers/actions/lower_bottom_drawable_action.dart';
 import 'package:flutter_painter/src/controllers/actions/raise_top_drawable_action.dart';
