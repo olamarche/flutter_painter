@@ -18,23 +18,24 @@ class ReplaceMultipleDrawableAction extends ControllerAction<bool, bool> {
   @protected
   @override
   bool perform$(PainterController controller) {
-    final value = controller.value;
-    final currentDrawables = List<Drawable>.from(value.drawables);
-    final selectedDrawables = controller.value.selectedDrawables;
-    final selectedObject = controller.value.selectedObjectDrawable;
+    PainterControllerValue value = controller.value;
+    List<Drawable> currentDrawables = List<Drawable>.from(value.drawables);
+    List<ObjectDrawable> selectedDrawables = value.selectedDrawables;
+    ObjectDrawable? selectedObjectDrawable = value.selectedObjectDrawable;
 
     final oldObjectDrawables = List<ObjectDrawable>.from(oldDrawables);
     final newObjectDrawables = List<ObjectDrawable>.from(newDrawables);
 
-    for (int i = 0; i < oldDrawables.length - 1; i++) {
+    for (int i = 0; i < oldDrawables.length; i++) {
+      //newDrawables
       final oldDrawableIndex = currentDrawables.indexOf(oldDrawables[i]);
       if (oldDrawableIndex < 0) {
         return false;
       }
-      final isSelectedObject = oldDrawables[i] == selectedObject;
       currentDrawables
           .setRange(oldDrawableIndex, oldDrawableIndex + 1, [newDrawables[i]]);
 
+      //newSelectedDrawables
       final oldSelectedDrawablesIndex =
           selectedDrawables.indexOf(oldObjectDrawables[i]);
       if (oldSelectedDrawablesIndex >= 0) {
@@ -42,19 +43,24 @@ class ReplaceMultipleDrawableAction extends ControllerAction<bool, bool> {
             oldSelectedDrawablesIndex + 1, [newObjectDrawables[i]]);
       }
 
-      controller.value = value.copyWith(
-        drawables: currentDrawables,
-        selectedObjectDrawable: isSelectedObject
-            ? newDrawables[i] is ObjectDrawable
-                ? (newDrawables[i] as ObjectDrawable)
-                : selectedObject
-            : null,
-        selectedDrawables: selectedDrawables,
-      );
-      if (isSelectedObject && newDrawables[i] is! ObjectDrawable) {
+      //check selectedObjectDrawable
+      if (oldObjectDrawables[i] == selectedObjectDrawable) {
+        if (newDrawables[i] is ObjectDrawable) {
+          selectedObjectDrawable = newDrawables[i] as ObjectDrawable;
+        }
+      }
+      if (oldObjectDrawables[i] == selectedObjectDrawable &&
+          newDrawables[i] is! ObjectDrawable) {
         controller.deselectObjectDrawable(isRemoved: true);
       }
     }
+
+    //set value
+    controller.value = value.copyWith(
+      drawables: currentDrawables,
+      selectedObjectDrawable: selectedObjectDrawable,
+      selectedDrawables: selectedDrawables,
+    );
 
     return true;
   }
@@ -63,20 +69,19 @@ class ReplaceMultipleDrawableAction extends ControllerAction<bool, bool> {
   @protected
   @override
   bool unperform$(PainterController controller) {
-    final value = controller.value;
-    final currentDrawables = List<Drawable>.from(value.drawables);
-    final selectedDrawables = controller.value.selectedDrawables;
-    final selectedObject = controller.value.selectedObjectDrawable;
+    PainterControllerValue value = controller.value;
+    List<Drawable> currentDrawables = List<Drawable>.from(value.drawables);
+    List<ObjectDrawable> selectedDrawables = value.selectedDrawables;
+    ObjectDrawable? selectedObjectDrawable = value.selectedObjectDrawable;
 
     final oldObjectDrawables = List<ObjectDrawable>.from(oldDrawables);
     final newObjectDrawables = List<ObjectDrawable>.from(newDrawables);
 
-    for (int i = 0; i < newDrawables.length - 1; i++) {
+    for (int i = 0; i < newDrawables.length; i++) {
       final newDrawableIndex = value.drawables.indexOf(newDrawables[i]);
       if (newDrawableIndex < 0) {
         return false;
       }
-      final isSelectedObject = newDrawables[i] == selectedObject;
       currentDrawables
           .setRange(newDrawableIndex, newDrawableIndex + 1, [oldDrawables[i]]);
 
@@ -87,19 +92,24 @@ class ReplaceMultipleDrawableAction extends ControllerAction<bool, bool> {
             newSelectedDrawablesIndex + 1, [oldObjectDrawables[i]]);
       }
 
-      controller.value = value.copyWith(
-        drawables: currentDrawables,
-        selectedObjectDrawable: isSelectedObject
-            ? oldDrawables[i] is ObjectDrawable
-                ? (oldDrawables[i] as ObjectDrawable)
-                : selectedObject
-            : null,
-        selectedDrawables: selectedDrawables,
-      );
-      if (isSelectedObject && oldDrawables[i] is! ObjectDrawable) {
+      //check selectedObjectDrawable
+      if (newObjectDrawables[i] == selectedObjectDrawable) {
+        if (oldDrawables[i] is ObjectDrawable) {
+          selectedObjectDrawable = oldDrawables[i] as ObjectDrawable;
+        }
+      }
+      if (newObjectDrawables[i] == selectedObjectDrawable &&
+          oldDrawables[i] is! ObjectDrawable) {
         controller.deselectObjectDrawable(isRemoved: true);
       }
     }
+
+    controller.value = value.copyWith(
+      drawables: currentDrawables,
+      selectedObjectDrawable: selectedObjectDrawable,
+      selectedDrawables: selectedDrawables,
+    );
+
     return true;
   }
 
@@ -112,7 +122,7 @@ class ReplaceMultipleDrawableAction extends ControllerAction<bool, bool> {
   @protected
   @override
   ControllerAction? merge$(ControllerAction previousAction) {
-    for (int i = 0; i < newDrawables.length - 1; i++) {
+    for (int i = 0; i < newDrawables.length; i++) {
       if (previousAction is AddDrawablesAction &&
           previousAction.drawables.last == oldDrawables[i]) {
         return AddDrawablesAction([...previousAction.drawables]

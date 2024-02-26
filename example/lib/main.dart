@@ -186,7 +186,9 @@ class _FlutterPainterExampleState extends State<FlutterPainterExample> {
                             onSelected: (DrawablesAlign align) {
                               switch (align) {
                                 case DrawablesAlign.left:
-                                  controller.alignLeftDrawables();
+                                  setState(() {
+                                    controller.alignLeftDrawables();
+                                  });
                                   break;
                                 case DrawablesAlign.center:
                                   controller.alignCenterDrawables();

@@ -6,7 +6,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_painter/src/controllers/actions/add_selected_drawables_action.dart';
 import 'package:flutter_painter/src/controllers/actions/align_center_drawables_action.dart';
-import 'package:flutter_painter/src/controllers/actions/align_left_drawables_action.dart';
 import 'package:flutter_painter/src/controllers/actions/align_right_drawables_action.dart';
 import 'package:flutter_painter/src/controllers/actions/distribute_horizontal_spacing_drawables_action.dart';
 import 'package:flutter_painter/src/controllers/actions/lower_bottom_drawable_action.dart';
@@ -461,27 +460,93 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
   }
 
   void alignLeftDrawables({bool newAction = true}) {
-    if (selectedDrawables.isNotEmpty) {
-      final action = AlignLeftDrawablesAction();
-      action.perform(this);
-      _addAction(action, newAction);
+    //Old Drawables
+    final currentSelectedDrawables = selectedDrawables;
+
+    //find min dx
+    ObjectDrawable fist = currentSelectedDrawables.first;
+    double minDx = leftX(fist);
+    // ignore: avoid_function_literals_in_foreach_calls
+    currentSelectedDrawables.forEach((item) => {
+          if (leftX(item) < minDx) {minDx = leftX(item)}
+        });
+
+    //New Drawables
+    List<ObjectDrawable> newSelectedDrawables = [];
+    for (var obj in currentSelectedDrawables) {
+      ObjectDrawable drawable = obj.copyWith(
+          position: Offset(minDx + (obj.getSize().width / 2), obj.position.dy));
+      newSelectedDrawables.add(drawable);
     }
+
+    //Replace Multiple Drawable
+    final action = ReplaceMultipleDrawableAction(
+      List<Drawable>.from(currentSelectedDrawables),
+      List<Drawable>.from(newSelectedDrawables),
+    );
+    action.perform(this);
+    _addAction(action, newAction);
   }
 
   void alignCenterDrawables({bool newAction = true}) {
-    if (selectedDrawables.isNotEmpty) {
-      final action = AlignCenterDrawablesAction();
-      action.perform(this);
-      _addAction(action, newAction);
+    //Old Drawables
+    final currentSelectedDrawables = selectedDrawables;
+
+    //find center dx
+    ObjectDrawable fist = currentSelectedDrawables.first;
+    double minDx = leftX(fist);
+    double maxDx = rightX(fist);
+    // ignore: avoid_function_literals_in_foreach_calls
+    currentSelectedDrawables.forEach((item) => {
+          if (leftX(item) < minDx) {minDx = leftX(item)},
+          if (rightX(item) > maxDx) {maxDx = rightX(item)}
+        });
+    double center = (minDx + maxDx) / 2;
+
+    //New Drawables
+    List<ObjectDrawable> newSelectedDrawables = [];
+    for (var obj in currentSelectedDrawables) {
+      ObjectDrawable drawable =
+          obj.copyWith(position: Offset(center, obj.position.dy));
+      newSelectedDrawables.add(drawable);
     }
+
+    //Replace Multiple Drawable
+    final action = ReplaceMultipleDrawableAction(
+      List<Drawable>.from(currentSelectedDrawables),
+      List<Drawable>.from(newSelectedDrawables),
+    );
+    action.perform(this);
+    _addAction(action, newAction);
   }
 
   void alignRightDrawables({bool newAction = true}) {
-    if (selectedDrawables.isNotEmpty) {
-      final action = AlignRightDrawablesAction();
-      action.perform(this);
-      _addAction(action, newAction);
+    //Old Drawables
+    final currentSelectedDrawables = selectedDrawables;
+
+    //find max dx
+    ObjectDrawable fist = currentSelectedDrawables.first;
+    double maxDx = rightX(fist);
+    // ignore: avoid_function_literals_in_foreach_calls
+    currentSelectedDrawables.forEach((item) => {
+          if (rightX(item) > maxDx) {maxDx = rightX(item)}
+        });
+
+    //New Drawables
+    List<ObjectDrawable> newSelectedDrawables = [];
+    for (var obj in currentSelectedDrawables) {
+      ObjectDrawable drawable = obj.copyWith(
+          position: Offset(maxDx - (obj.getSize().width / 2), obj.position.dy));
+      newSelectedDrawables.add(drawable);
     }
+
+    //Replace Multiple Drawable
+    final action = ReplaceMultipleDrawableAction(
+      List<Drawable>.from(currentSelectedDrawables),
+      List<Drawable>.from(newSelectedDrawables),
+    );
+    action.perform(this);
+    _addAction(action, newAction);
   }
 
   void distributeHorizontalSpacingDrawables({bool newAction = true}) {

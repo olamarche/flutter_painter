@@ -762,6 +762,9 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
         Offset(rotateOffset[12], rotateOffset[13]);
 
     updateDrawable(drawable, drawable, newAction: true);
+    setState(() {
+      controller?.clearSelectedDrawables();
+    });
   }
 
   /// Callback when the object drawable finishes movement, scaling and rotation.
