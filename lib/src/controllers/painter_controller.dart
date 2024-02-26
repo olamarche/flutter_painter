@@ -8,9 +8,11 @@ import 'package:flutter_painter/src/controllers/actions/add_selected_drawables_a
 import 'package:flutter_painter/src/controllers/actions/align_center_drawables_action.dart';
 import 'package:flutter_painter/src/controllers/actions/align_left_drawables_action.dart';
 import 'package:flutter_painter/src/controllers/actions/align_right_drawables_action.dart';
+import 'package:flutter_painter/src/controllers/actions/distribute_horizontal_spacing_drawables_action.dart';
 import 'package:flutter_painter/src/controllers/actions/lower_bottom_drawable_action.dart';
 import 'package:flutter_painter/src/controllers/actions/raise_top_drawable_action.dart';
 import 'package:flutter_painter/src/controllers/actions/remove_selected_drawables_action.dart';
+import 'package:flutter_painter/src/controllers/actions/replace_multiple_drawable_action.dart';
 import 'package:flutter_painter/src/controllers/events/turn_off_multiselect_event.dart';
 import 'actions/clear_selected_drawables_action.dart';
 import 'events/selected_object_drawable_removed_event.dart';
@@ -152,6 +154,15 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
   bool replaceDrawable(Drawable oldDrawable, Drawable newDrawable,
       {bool newAction = true}) {
     final action = ReplaceDrawableAction(oldDrawable, newDrawable);
+    final value = action.perform(this);
+    if (value) _addAction(action, newAction);
+    return value;
+  }
+
+  bool replaceMultipleDrawable(
+      List<Drawable> oldDrawables, List<Drawable> newDrawables,
+      {bool newAction = true}) {
+    final action = ReplaceMultipleDrawableAction(oldDrawables, newDrawables);
     final value = action.perform(this);
     if (value) _addAction(action, newAction);
     return value;
@@ -441,6 +452,14 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
     );
   }
 
+  double rightX(ObjectDrawable drawable) {
+    return drawable.position.dx + drawable.getSize().width / 2;
+  }
+
+  double leftX(ObjectDrawable drawable) {
+    return drawable.position.dx - drawable.getSize().width / 2;
+  }
+
   void alignLeftDrawables({bool newAction = true}) {
     if (selectedDrawables.isNotEmpty) {
       final action = AlignLeftDrawablesAction();
@@ -457,9 +476,17 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
     }
   }
 
-  void alignRighrDrawables({bool newAction = true}) {
+  void alignRightDrawables({bool newAction = true}) {
     if (selectedDrawables.isNotEmpty) {
       final action = AlignRightDrawablesAction();
+      action.perform(this);
+      _addAction(action, newAction);
+    }
+  }
+
+  void distributeHorizontalSpacingDrawables({bool newAction = true}) {
+    if (selectedDrawables.isNotEmpty) {
+      final action = DistributeHorizontalSpacingDrawablesAction();
       action.perform(this);
       _addAction(action, newAction);
     }
@@ -470,6 +497,10 @@ enum DrawablesAlign {
   left,
   right,
   center,
+  // ignore: constant_identifier_names
+  distribute_vertical_spacing,
+  // ignore: constant_identifier_names
+  distribute_horizontal_spacing,
 }
 
 /// The current paint mode, drawables and background values of a [FlutterPainter] widget.
