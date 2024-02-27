@@ -184,24 +184,7 @@ class _FlutterPainterExampleState extends State<FlutterPainterExample> {
                             ),
                             offset: const Offset(0, 54),
                             onSelected: (DrawablesAlign align) {
-                              switch (align) {
-                                case DrawablesAlign.left:
-                                  setState(() {
-                                    controller.alignLeftDrawables();
-                                  });
-                                  break;
-                                case DrawablesAlign.center:
-                                  controller.alignCenterDrawables();
-                                  break;
-                                case DrawablesAlign.right:
-                                  controller.alignRightDrawables();
-                                  break;
-                                case DrawablesAlign
-                                      .distribute_horizontal_spacing:
-                                  controller
-                                      .distributeHorizontalSpacingDrawables();
-                                  break;
-                              }
+                              controller.drawablesAlign(align);
                             },
                             itemBuilder: (BuildContext context) =>
                                 <PopupMenuEntry<DrawablesAlign>>[
@@ -227,11 +210,17 @@ class _FlutterPainterExampleState extends State<FlutterPainterExample> {
                                 ),
                               ),
                               const PopupMenuItem<DrawablesAlign>(
-                                value: DrawablesAlign
-                                    .distribute_horizontal_spacing,
+                                value: DrawablesAlign.distribute_horizontal,
                                 child: ListTile(
                                   leading: Icon(Icons.horizontal_distribute),
-                                  title: Text('Distribute horizontal spacing'),
+                                  title: Text('Distribute horizontal'),
+                                ),
+                              ),
+                              const PopupMenuItem<DrawablesAlign>(
+                                value: DrawablesAlign.distribute_vertical,
+                                child: ListTile(
+                                  leading: Icon(Icons.vertical_distribute),
+                                  title: Text('Distribute vertical'),
                                 ),
                               ),
                             ],

@@ -5,7 +5,6 @@ import 'dart:ui' as ui;
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_painter/src/controllers/actions/add_selected_drawables_action.dart';
-import 'package:flutter_painter/src/controllers/actions/distribute_horizontal_spacing_drawables_action.dart';
 import 'package:flutter_painter/src/controllers/actions/lower_bottom_drawable_action.dart';
 import 'package:flutter_painter/src/controllers/actions/raise_top_drawable_action.dart';
 import 'package:flutter_painter/src/controllers/actions/remove_selected_drawables_action.dart';
@@ -457,6 +456,34 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
     return drawable.position.dx - drawable.getSize().width / 2;
   }
 
+  double topY(ObjectDrawable drawable) {
+    return drawable.position.dy + drawable.getSize().height / 2;
+  }
+
+  double bottomY(ObjectDrawable drawable) {
+    return drawable.position.dy - drawable.getSize().height / 2;
+  }
+
+  void drawablesAlign(DrawablesAlign align, {bool newAction = true}) {
+    switch (align) {
+      case DrawablesAlign.left:
+        alignLeftDrawables(newAction: newAction);
+        break;
+      case DrawablesAlign.center:
+        alignCenterDrawables(newAction: newAction);
+        break;
+      case DrawablesAlign.right:
+        alignRightDrawables(newAction: newAction);
+        break;
+      case DrawablesAlign.distribute_horizontal:
+        distributeHorizontalSpacingDrawables(newAction: newAction);
+        break;
+      case DrawablesAlign.distribute_vertical:
+        distributeVerticalSpacingDrawables(newAction: newAction);
+        break;
+    }
+  }
+
   void alignLeftDrawables({bool newAction = true}) {
     //Old Drawables
     final currentSelectedDrawables = selectedDrawables;
@@ -548,11 +575,100 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
   }
 
   void distributeHorizontalSpacingDrawables({bool newAction = true}) {
-    if (selectedDrawables.isNotEmpty) {
-      final action = DistributeHorizontalSpacingDrawablesAction();
-      action.perform(this);
-      _addAction(action, newAction);
+    //Old Drawables
+    final currentSelectedDrawables = selectedDrawables;
+
+    //find center space
+    ObjectDrawable fist = currentSelectedDrawables.first;
+    double minDx = leftX(fist);
+    double maxDx = rightX(fist);
+    double sumWidth = 0;
+    // ignore: avoid_function_literals_in_foreach_calls
+    currentSelectedDrawables.forEach((item) => {
+          if (leftX(item) < minDx) {minDx = leftX(item)},
+          if (rightX(item) > maxDx) {maxDx = rightX(item)},
+          sumWidth += item.getSize().width,
+        });
+    double space =
+        (maxDx - minDx - sumWidth) / (currentSelectedDrawables.length - 1);
+
+    double xAxis = minDx;
+    List<ObjectDrawable> newSelectedDrawables = [];
+
+    currentSelectedDrawables
+        .sort((a, b) => a.position.dx.compareTo(b.position.dy));
+
+    for (int i = 0; i < currentSelectedDrawables.length; i++) {
+      final obj = currentSelectedDrawables[i];
+      ObjectDrawable? prvObj = i > 0 ? currentSelectedDrawables[i - 1] : null;
+
+      if (i == 0) {
+        xAxis += (obj.getSize().width / 2);
+      } else {
+        xAxis +=
+            (prvObj!.getSize().width / 2 + space + obj.getSize().width / 2);
+      }
+
+      final drawable = obj.copyWith(position: Offset(xAxis, obj.position.dy));
+
+      newSelectedDrawables.add(drawable);
     }
+
+    //Replace Multiple Drawable
+    final action = ReplaceMultipleDrawableAction(
+      List<Drawable>.from(currentSelectedDrawables),
+      List<Drawable>.from(newSelectedDrawables),
+    );
+    action.perform(this);
+    _addAction(action, newAction);
+  }
+
+  void distributeVerticalSpacingDrawables({bool newAction = true}) {
+    //Old Drawables
+    final currentSelectedDrawables = selectedDrawables;
+
+    //find center space
+    ObjectDrawable fist = currentSelectedDrawables.first;
+    double minDy = bottomY(fist);
+    double maxDy = topY(fist);
+    double sumHeight = 0;
+    // ignore: avoid_function_literals_in_foreach_calls
+    currentSelectedDrawables.forEach((item) => {
+          if (bottomY(item) < minDy) {minDy = bottomY(item)},
+          if (topY(item) > maxDy) {maxDy = topY(item)},
+          sumHeight += item.getSize().height,
+        });
+    double space =
+        (maxDy - minDy - sumHeight) / (currentSelectedDrawables.length - 1);
+
+    double yAxis = minDy;
+    List<ObjectDrawable> newSelectedDrawables = [];
+    currentSelectedDrawables
+        .sort((a, b) => a.position.dy.compareTo(b.position.dy));
+
+    for (int i = 0; i < currentSelectedDrawables.length; i++) {
+      final obj = currentSelectedDrawables[i];
+      ObjectDrawable? prvObj = i > 0 ? currentSelectedDrawables[i - 1] : null;
+
+      if (i == 0) {
+        yAxis += (obj.getSize().height / 2);
+      } else {
+        yAxis +=
+            (prvObj!.getSize().height / 2 + space + obj.getSize().height / 2);
+      }
+
+      final drawable = obj.copyWith(position: Offset(obj.position.dx, yAxis));
+
+      newSelectedDrawables.add(drawable);
+    }
+
+    //Replace Multiple Drawable
+    final action = ReplaceMultipleDrawableAction(
+      List<Drawable>.from(currentSelectedDrawables),
+      List<Drawable>.from(newSelectedDrawables),
+    );
+    action.perform(this);
+    _addAction(action, newAction);
   }
 }
 
@@ -561,9 +677,9 @@ enum DrawablesAlign {
   right,
   center,
   // ignore: constant_identifier_names
-  distribute_vertical_spacing,
+  distribute_vertical,
   // ignore: constant_identifier_names
-  distribute_horizontal_spacing,
+  distribute_horizontal,
 }
 
 /// The current paint mode, drawables and background values of a [FlutterPainter] widget.
