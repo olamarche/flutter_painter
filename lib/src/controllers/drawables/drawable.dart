@@ -5,8 +5,10 @@ abstract class Drawable {
   /// Whether the drawable is hidden or not.
   final bool hidden;
 
+  final String? key;
+
   /// Default constructor.
-  const Drawable({this.hidden = false});
+  const Drawable({this.hidden = false, this.key});
 
   /// Draws the drawable on the provided [canvas] of size [size].
   void draw(Canvas canvas, Size size);
