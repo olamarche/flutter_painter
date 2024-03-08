@@ -299,8 +299,8 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
                                                                   selectedBorderWidth),
                                                           boxShadow: [
                                                             BorderBoxShadow(
-                                                              color:
-                                                                  Colors.black,
+                                                              color: Colors
+                                                                  .transparent,
                                                               blurRadius:
                                                                   selectedBlurRadius,
                                                             )
