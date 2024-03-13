@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:collection/collection.dart';
@@ -9,6 +10,8 @@ import 'package:flutter_painter/src/controllers/actions/lower_bottom_drawable_ac
 import 'package:flutter_painter/src/controllers/actions/raise_top_drawable_action.dart';
 import 'package:flutter_painter/src/controllers/actions/remove_selected_drawables_action.dart';
 import 'package:flutter_painter/src/controllers/actions/replace_multiple_drawable_action.dart';
+import 'package:flutter_painter/src/controllers/drawables/sound_drawable.dart';
+import 'package:flutter_painter/src/controllers/events/add_sound_painter_event.dart';
 import 'package:flutter_painter/src/controllers/events/turn_off_multiselect_event.dart';
 import 'actions/clear_selected_drawables_action.dart';
 import 'events/selected_object_drawable_removed_event.dart';
@@ -300,6 +303,23 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
   /// Dispatches a [AddTextPainterEvent] on `events` stream.
   void addText() {
     _eventsSteamController.add(const AddTextPainterEvent());
+  }
+
+  void addSound(File sound) {
+    final renderBox =
+        painterKey.currentContext?.findRenderObject() as RenderBox?;
+    final center = renderBox == null
+        ? Offset.zero
+        : Offset(
+            renderBox.size.width / 2,
+            renderBox.size.height / 2,
+          );
+
+    final SoundDrawable drawable;
+
+    drawable = SoundDrawable(sound: sound, position: center);
+
+    addDrawables([drawable]);
   }
 
   /// Adds an [ImageDrawable] to the center of the painter.

@@ -62,7 +62,6 @@ class SoundDrawable extends ObjectDrawable {
       double? rotation,
       double? scale,
       File? sound,
-      bool? flipped,
       bool? locked}) {
     return SoundDrawable(
       hidden: hidden ?? this.hidden,
