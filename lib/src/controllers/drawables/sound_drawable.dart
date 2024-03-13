@@ -78,7 +78,7 @@ class SoundDrawable extends ObjectDrawable {
   @override
   void drawObject(Canvas canvas, Size size) {
     // Draw the image onto the canvas.
-    canvas.drawCircle(Offset.zero, 20, Paint());
+    canvas.drawCircle(Offset(400, 400), 20, Paint());
   }
 
   /// Calculates the size of the rendered object.
