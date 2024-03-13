@@ -305,18 +305,18 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
   }
 
   void addSound(File sound) {
-    final renderBox =
-        painterKey.currentContext?.findRenderObject() as RenderBox?;
-    final center = renderBox == null
-        ? Offset.zero
-        : Offset(
-            renderBox.size.width / 2,
-            renderBox.size.height / 2,
-          );
+    // final renderBox =
+    //     painterKey.currentContext?.findRenderObject() as RenderBox?;
+    // final center = renderBox == null
+    //     ? Offset.zero
+    //     : Offset(
+    //         renderBox.size.width / 2,
+    //         renderBox.size.height / 2,
+    //       );
 
     final SoundDrawable drawable;
 
-    drawable = SoundDrawable(sound: sound, position: center);
+    drawable = SoundDrawable(sound: sound, position: Offset(100, 100));
 
     addDrawables([drawable]);
   }
