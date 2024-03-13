@@ -11,7 +11,6 @@ import 'package:flutter_painter/src/controllers/actions/raise_top_drawable_actio
 import 'package:flutter_painter/src/controllers/actions/remove_selected_drawables_action.dart';
 import 'package:flutter_painter/src/controllers/actions/replace_multiple_drawable_action.dart';
 import 'package:flutter_painter/src/controllers/drawables/sound_drawable.dart';
-import 'package:flutter_painter/src/controllers/events/add_sound_painter_event.dart';
 import 'package:flutter_painter/src/controllers/events/turn_off_multiselect_event.dart';
 import 'actions/clear_selected_drawables_action.dart';
 import 'events/selected_object_drawable_removed_event.dart';
