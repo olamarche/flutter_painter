@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_painter/flutter_painter.dart';
 import 'package:flutter_painter/src/controllers/drawables/shape/shape_drawable.dart';
 import 'package:flutter_painter/src/controllers/drawables/sized2ddrawable.dart';
 
@@ -92,7 +94,30 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
   @override
   void drawObject(Canvas canvas, Size size) {
     // Draw the image onto the canvas.
-    canvas.drawCircle(position, 20, paint);
+    //canvas.drawCircle(position, 20, paint.copyWith(style: PaintingStyle.fill));
+
+    // Draw the circle
+    //canvas.drawOval(Rect.fromLTWH(0, 0, size.width, size.height), _paint);
+
+    // Add the play button icon (you can customize the position and size)
+    final playIcon = Icons.play_arrow; // Use any icon you like
+    final iconSize = 24.0;
+    final iconCenter = Offset(size.width / 2, size.height / 2);
+    canvas.drawCircle(iconCenter, iconSize, paint);
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: String.fromCharCode(playIcon.codePoint),
+        style: TextStyle(
+          color: Colors.green,
+          fontSize: iconSize,
+          fontFamily: playIcon.fontFamily,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+    textPainter.paint(canvas,
+        iconCenter - Offset(textPainter.width / 2, textPainter.height / 2));
   }
 
   /// Calculates the size of the rendered object.
