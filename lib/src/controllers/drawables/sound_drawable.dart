@@ -6,22 +6,21 @@ import 'package:flutter/services.dart';
 import 'package:flutter_painter/flutter_painter.dart';
 import 'package:flutter_painter/src/controllers/drawables/sized2ddrawable.dart';
 
-/// A drawable of an image as an object.
+/// A drawable of an sound as an object.
 class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
   @override
   Paint paint;
 
-  /// The image to be drawn.
   final File sound;
+
   final String iconAssetPath;
 
   /// Creates an [SoundDrawable] with the given [sound].
   SoundDrawable({
     Paint? paint,
-    String? iconPathAsset,
+    String? iconAssetPath,
     required Offset position,
     required Size size,
-    String? iconAssetPath,
     double rotationAngle = 0,
     double scale = 1,
     Set<ObjectDrawableAssist> assists = const <ObjectDrawableAssist>{},
@@ -77,8 +76,8 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
       double? scale,
       Size? size,
       Paint? paint,
+      String? iconAssetPath,
       File? sound,
-      Image? image,
       bool? locked}) {
     return SoundDrawable(
       hidden: hidden ?? this.hidden,
