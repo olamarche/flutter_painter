@@ -92,7 +92,7 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
   @override
   void drawObject(Canvas canvas, Size size) {
     // Draw the image onto the canvas.
-    canvas.drawCircle(Offset(400, 400), 20, paint);
+    canvas.drawCircle(position, 20, paint);
   }
 
   /// Calculates the size of the rendered object.
