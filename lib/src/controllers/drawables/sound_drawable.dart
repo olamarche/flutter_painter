@@ -89,30 +89,4 @@ class SoundDrawable extends ObjectDrawable {
       40 * scale,
     );
   }
-
-  /// Compares two [SoundDrawable]s for equality.
-  // @override
-  // bool operator ==(Object other) {
-  //   return other is SoundDrawable &&
-  //       super == other &&
-  //       other.image == image;
-  // }
-  //
-  // @override
-  // int get hashCode => hashValues(
-  //     hidden,
-  //     hashList(assists),
-  //     hashList(assistPaints.entries),
-  //     position,
-  //     rotationAngle,
-  //     scale,
-  //     image);
-
-  // static double _calculateScaleFittedToSize(Image image, Size size) {
-  //   if (image.width >= image.height) {
-  //     return size.width / image.width;
-  //   } else {
-  //     return size.height / image.height;
-  //   }
-  // }
 }
