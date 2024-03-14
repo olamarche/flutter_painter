@@ -1,6 +1,8 @@
 import 'dart:io';
-import 'dart:ui';
+import 'dart:ui' as ui;
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_painter/flutter_painter.dart';
 import 'package:flutter_painter/src/controllers/drawables/sized2ddrawable.dart';
 
@@ -11,14 +13,15 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
 
   /// The image to be drawn.
   final File sound;
-
-  final Image image;
+  final String iconAssetPath;
 
   /// Creates an [SoundDrawable] with the given [sound].
   SoundDrawable({
     Paint? paint,
+    String? iconPathAsset,
     required Offset position,
     required Size size,
+    String? iconAssetPath,
     double rotationAngle = 0,
     double scale = 1,
     Set<ObjectDrawableAssist> assists = const <ObjectDrawableAssist>{},
@@ -27,8 +30,8 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
     bool locked = false,
     bool hidden = false,
     required this.sound,
-    required this.image,
   })  : paint = paint ?? ShapeDrawable.defaultPaint,
+        iconAssetPath = iconAssetPath ?? 'assets/images/play.png',
         super(
             size: size,
             position: position,
@@ -86,7 +89,6 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
       size: size ?? this.size,
       paint: paint ?? this.paint,
       sound: sound ?? this.sound,
-      image: image ?? this.image,
       locked: locked ?? this.locked,
     );
   }
@@ -94,21 +96,34 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
   /// Draws the sound icon on the provided [canvas] of size [size].
   @override
   void drawObject(Canvas canvas, Size size) {
-    final scaledSize =
-        Offset(image.width.toDouble(), image.height!.toDouble()) * scale;
-    // Draw the image onto the canvas.
-    //canvas.drawCircle(position, 20, paint.copyWith(style: PaintingStyle.fill));
-    canvas.drawImageRect(
-        image,
-        Rect.fromPoints(Offset.zero,
-            Offset(image.width.toDouble(), image.height.toDouble())),
-        Rect.fromPoints(position - scaledSize / 2, position + scaledSize / 2),
-        Paint());
+    loadUiImage(iconAssetPath).then((image) {
+      final scaledSize =
+          Offset(image.width.toDouble(), image.height.toDouble()) * scale;
+      // Draw the image onto the canvas.
+      //canvas.drawCircle(position, 20, paint.copyWith(style: PaintingStyle.fill));
+      canvas.drawImageRect(
+          image,
+          Rect.fromPoints(Offset.zero,
+              Offset(image.width.toDouble(), image.height.toDouble())),
+          Rect.fromPoints(position - scaledSize / 2, position + scaledSize / 2),
+          Paint());
+    });
   }
 
   /// Calculates the size of the rendered object.
   @override
   Size getSize({double minWidth = 0.0, double maxWidth = double.infinity}) {
-    return Size(image.width * scale, image.height * scale);
+    loadUiImage(iconAssetPath).then((image) {
+      return Size(image.width * scale, image.height * scale);
+    });
+    return const Size(0, 0);
+  }
+
+  Future<ui.Image> loadUiImage(String assetPath) async {
+    final data = await rootBundle.load(assetPath);
+    final bytes = data.buffer.asUint8List();
+    final codec = await ui.instantiateImageCodec(bytes);
+    final frame = await codec.getNextFrame();
+    return frame.image;
   }
 }
