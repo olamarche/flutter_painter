@@ -3,52 +3,57 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_painter/flutter_painter.dart';
-import 'package:flutter_painter/src/controllers/drawables/shape/shape_drawable.dart';
-import 'package:flutter_painter/src/controllers/drawables/sized2ddrawable.dart';
+import 'package:flutter_painter/flutter_painter_pure.dart';
 
 import 'object_drawable.dart';
 
 /// A drawable of an image as an object.
-class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
-  @override
-  Paint paint;
-
+class SoundDrawable extends ObjectDrawable {
   /// The image to be drawn.
   final File sound;
 
+  /// The text to be drawn.
+  String text = 'play';
+
+  /// The style the text will be drawn with.
+  final TextStyle style;
+
+  /// The direction of the text to be drawn.
+  final TextDirection direction;
+
+  /// The align of the text.
+  final TextAlign textAlign;
+
+  // A text painter which will paint the text on the canvas.
   final TextPainter textPainter;
 
   /// Creates an [SoundDrawable] with the given [sound].
   SoundDrawable({
-    Paint? paint,
+    required this.text,
     required Offset position,
-    required Size size,
-    double rotationAngle = 0,
+    required this.sound,
+    double rotation = 0,
     double scale = 1,
-    Set<ObjectDrawableAssist> assists = const <ObjectDrawableAssist>{},
-    Map<ObjectDrawableAssist, Paint> assistPaints =
-        const <ObjectDrawableAssist, Paint>{},
+    this.style = const TextStyle(
+      fontSize: 14,
+      color: Colors.black,
+    ),
+    this.direction = TextDirection.ltr,
+    this.textAlign = TextAlign.center,
     bool locked = false,
     bool hidden = false,
-    required this.sound,
-  })  : paint = paint ?? ShapeDrawable.defaultPaint,
-        textPainter = TextPainter(
-          text: TextSpan(
-            text: 'play',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 24,
-            ),
-          ),
-          textDirection: TextDirection.ltr,
-        ), // Initialize textPainter here
+    Set<ObjectDrawableAssist> assists = const <ObjectDrawableAssist>{},
+  })  : textPainter = TextPainter(
+          text: TextSpan(text: text, style: style),
+          textAlign: textAlign,
+          textScaleFactor: scale,
+          textDirection: direction,
+        ),
         super(
-            size: size,
             position: position,
-            rotationAngle: rotationAngle,
+            rotationAngle: rotation,
             scale: scale,
             assists: assists,
-            assistPaints: assistPaints,
             locked: locked,
             hidden: hidden);
 
@@ -79,27 +84,30 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
 
   /// Creates a copy of this but with the given fields replaced with the new values.
   @override
-  SoundDrawable copyWith(
-      {bool? hidden,
-      Set<ObjectDrawableAssist>? assists,
-      Offset? position,
-      double? rotation,
-      double? scale,
-      Size? size,
-      Paint? paint,
-      File? sound,
-      bool? locked}) {
+  SoundDrawable copyWith({
+    bool? hidden,
+    Set<ObjectDrawableAssist>? assists,
+    String? text,
+    Offset? position,
+    double? rotation,
+    double? scale,
+    TextStyle? style,
+    bool? locked,
+    TextDirection? direction,
+    TextAlign? textAlign,
+  }) {
     return SoundDrawable(
-      hidden: hidden ?? this.hidden,
-      assists: assists ?? this.assists,
-      position: position ?? this.position,
-      rotationAngle: rotation ?? rotationAngle,
-      scale: scale ?? this.scale,
-      size: size ?? this.size,
-      paint: paint ?? this.paint,
-      sound: sound ?? this.sound,
-      locked: locked ?? this.locked,
-    );
+        text: '',
+        position: position ?? this.position,
+        rotation: rotation ?? rotationAngle,
+        scale: scale ?? this.scale,
+        style: style ?? this.style,
+        direction: direction ?? this.direction,
+        textAlign: textAlign ?? this.textAlign,
+        assists: assists ?? this.assists,
+        hidden: hidden ?? this.hidden,
+        locked: locked ?? this.locked,
+        sound: sound);
   }
 
   /// Draws the sound icon on the provided [canvas] of size [size].
@@ -115,7 +123,7 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
     final playIcon = Icons.play_arrow; // Use any icon you like
     final iconSize = 24.0;
     final iconCenter = Offset(size.width / 2, size.height / 2);
-    canvas.drawCircle(iconCenter, iconSize, paint);
+
     final textPainter = TextPainter(
       text: TextSpan(
         text: String.fromCharCode(playIcon.codePoint),
