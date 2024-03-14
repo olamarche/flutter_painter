@@ -317,7 +317,8 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
             renderBox.size.height / 2,
           );
 
-    drawable = SoundDrawable(sound: sound, position: center);
+    drawable =
+        SoundDrawable(sound: sound, position: center, size: const Size(50, 50));
 
     addDrawables([drawable]);
   }
