@@ -33,7 +33,15 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
     required this.sound,
   })  : paint = paint ?? ShapeDrawable.defaultPaint,
         textPainter = TextPainter(
-            textDirection: TextDirection.ltr), // Initialize textPainter here
+          text: TextSpan(
+            text: 'play',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 24,
+            ),
+          ),
+          textDirection: TextDirection.ltr,
+        ), // Initialize textPainter here
         super(
             size: size,
             position: position,
