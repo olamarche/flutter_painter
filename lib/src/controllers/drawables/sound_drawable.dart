@@ -16,6 +16,8 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
   /// The image to be drawn.
   final File sound;
 
+  final TextPainter textPainter;
+
   /// Creates an [SoundDrawable] with the given [sound].
   SoundDrawable({
     Paint? paint,
@@ -30,6 +32,8 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
     bool hidden = false,
     required this.sound,
   })  : paint = paint ?? ShapeDrawable.defaultPaint,
+        textPainter = TextPainter(
+            textDirection: TextDirection.ltr), // Initialize textPainter here
         super(
             size: size,
             position: position,
@@ -108,14 +112,16 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
       text: TextSpan(
         text: String.fromCharCode(playIcon.codePoint),
         style: TextStyle(
-          color: Colors.green,
+          color: Colors.black,
           fontSize: iconSize,
           fontFamily: playIcon.fontFamily,
         ),
       ),
       textDirection: TextDirection.ltr,
     );
+
     textPainter.layout();
+
     textPainter.paint(canvas,
         iconCenter - Offset(textPainter.width / 2, textPainter.height / 2));
   }
@@ -123,9 +129,8 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
   /// Calculates the size of the rendered object.
   @override
   Size getSize({double minWidth = 0.0, double maxWidth = double.infinity}) {
-    return Size(
-      40 * scale,
-      40 * scale,
-    );
+    // Generate the text as a visual layout
+    textPainter.layout(minWidth: minWidth, maxWidth: maxWidth * scale);
+    return textPainter.size;
   }
 }
