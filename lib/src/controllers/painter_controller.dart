@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -305,9 +306,7 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
   }
 
   /// Adds an [SoundDrawable] to the center of the painter.
-  void addSound(File sound, ui.Image icon) {
-    final SoundDrawable drawable;
-
+  void addSound(File sound, String iconPathAsset) {
     final renderBox =
         painterKey.currentContext?.findRenderObject() as RenderBox?;
     final center = renderBox == null
@@ -317,13 +316,21 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
             renderBox.size.height / 2,
           );
 
-    drawable = SoundDrawable(
-        sound: sound,
-        image: icon,
-        size: Size(icon.width.toDouble(), icon.height.toDouble()),
-        position: center);
+    loadImageFromAsset(iconPathAsset).then((icon) {
+      final SoundDrawable drawable = SoundDrawable(
+          sound: sound,
+          image: icon,
+          size: Size(icon.width.toDouble(), icon.height.toDouble()),
+          position: center);
+      addDrawables([drawable]);
+    });
+  }
 
-    addDrawables([drawable]);
+  Future<ui.Image> loadImageFromAsset(String assetName) async {
+    var buffer = await ImmutableBuffer.fromAsset(assetName);
+    var codec = await ui.instantiateImageCodecFromBuffer(buffer);
+    var frame = await codec.getNextFrame();
+    return frame.image;
   }
 
   /// Adds an [ImageDrawable] to the center of the painter.
