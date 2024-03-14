@@ -305,7 +305,7 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
   }
 
   /// Adds an [SoundDrawable] to the center of the painter.
-  void addSound(File sound) {
+  void addSound(File sound, ui.Image icon) {
     final SoundDrawable drawable;
 
     final renderBox =
@@ -317,7 +317,11 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
             renderBox.size.height / 2,
           );
 
-    drawable = SoundDrawable(sound: sound, position: center, text: 'play');
+    drawable = SoundDrawable(
+        sound: sound,
+        image: icon,
+        size: Size(icon.width.toDouble(), icon.height.toDouble()),
+        position: center);
 
     addDrawables([drawable]);
   }

@@ -1,59 +1,41 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_painter/flutter_painter.dart';
-import 'package:flutter_painter/flutter_painter_pure.dart';
-
-import 'object_drawable.dart';
+import 'package:flutter_painter/src/controllers/drawables/sized2ddrawable.dart';
 
 /// A drawable of an image as an object.
-class SoundDrawable extends ObjectDrawable {
+class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
+  @override
+  Paint paint;
+
   /// The image to be drawn.
   final File sound;
 
-  /// The text to be drawn.
-  String text = 'play';
-
-  /// The style the text will be drawn with.
-  final TextStyle style;
-
-  /// The direction of the text to be drawn.
-  final TextDirection direction;
-
-  /// The align of the text.
-  final TextAlign textAlign;
-
-  // A text painter which will paint the text on the canvas.
-  final TextPainter textPainter;
+  final Image image;
 
   /// Creates an [SoundDrawable] with the given [sound].
   SoundDrawable({
-    required this.text,
+    Paint? paint,
     required Offset position,
-    required this.sound,
-    double rotation = 0,
+    required Size size,
+    double rotationAngle = 0,
     double scale = 1,
-    this.style = const TextStyle(
-      fontSize: 14,
-      color: Colors.black,
-    ),
-    this.direction = TextDirection.ltr,
-    this.textAlign = TextAlign.center,
+    Set<ObjectDrawableAssist> assists = const <ObjectDrawableAssist>{},
+    Map<ObjectDrawableAssist, Paint> assistPaints =
+        const <ObjectDrawableAssist, Paint>{},
     bool locked = false,
     bool hidden = false,
-    Set<ObjectDrawableAssist> assists = const <ObjectDrawableAssist>{},
-  })  : textPainter = TextPainter(
-          text: TextSpan(text: text, style: style),
-          textAlign: textAlign,
-          textScaleFactor: scale,
-          textDirection: direction,
-        ),
+    required this.sound,
+    required this.image,
+  })  : paint = paint ?? ShapeDrawable.defaultPaint,
         super(
+            size: size,
             position: position,
-            rotationAngle: rotation,
+            rotationAngle: rotationAngle,
             scale: scale,
             assists: assists,
+            assistPaints: assistPaints,
             locked: locked,
             hidden: hidden);
 
@@ -84,69 +66,49 @@ class SoundDrawable extends ObjectDrawable {
 
   /// Creates a copy of this but with the given fields replaced with the new values.
   @override
-  SoundDrawable copyWith({
-    bool? hidden,
-    Set<ObjectDrawableAssist>? assists,
-    String? text,
-    Offset? position,
-    double? rotation,
-    double? scale,
-    TextStyle? style,
-    bool? locked,
-    TextDirection? direction,
-    TextAlign? textAlign,
-  }) {
+  SoundDrawable copyWith(
+      {bool? hidden,
+      Set<ObjectDrawableAssist>? assists,
+      Offset? position,
+      double? rotation,
+      double? scale,
+      Size? size,
+      Paint? paint,
+      File? sound,
+      Image? image,
+      bool? locked}) {
     return SoundDrawable(
-        text: '',
-        position: position ?? this.position,
-        rotation: rotation ?? rotationAngle,
-        scale: scale ?? this.scale,
-        style: style ?? this.style,
-        direction: direction ?? this.direction,
-        textAlign: textAlign ?? this.textAlign,
-        assists: assists ?? this.assists,
-        hidden: hidden ?? this.hidden,
-        locked: locked ?? this.locked,
-        sound: sound);
+      hidden: hidden ?? this.hidden,
+      assists: assists ?? this.assists,
+      position: position ?? this.position,
+      rotationAngle: rotation ?? rotationAngle,
+      scale: scale ?? this.scale,
+      size: size ?? this.size,
+      paint: paint ?? this.paint,
+      sound: sound ?? this.sound,
+      image: image ?? this.image,
+      locked: locked ?? this.locked,
+    );
   }
 
   /// Draws the sound icon on the provided [canvas] of size [size].
   @override
   void drawObject(Canvas canvas, Size size) {
+    final scaledSize =
+        Offset(image.width.toDouble(), image.height!.toDouble()) * scale;
     // Draw the image onto the canvas.
     //canvas.drawCircle(position, 20, paint.copyWith(style: PaintingStyle.fill));
-
-    // Draw the circle
-    //canvas.drawOval(Rect.fromLTWH(0, 0, size.width, size.height), _paint);
-
-    // Add the play button icon (you can customize the position and size)
-    final playIcon = Icons.play_arrow; // Use any icon you like
-    final iconSize = 24.0;
-    final iconCenter = Offset(size.width / 2, size.height / 2);
-
-    final textPainter = TextPainter(
-      text: TextSpan(
-        text: String.fromCharCode(playIcon.codePoint),
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: iconSize,
-          fontFamily: playIcon.fontFamily,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    );
-
-    textPainter.layout();
-
-    textPainter.paint(canvas,
-        iconCenter - Offset(textPainter.width / 2, textPainter.height / 2));
+    canvas.drawImageRect(
+        image,
+        Rect.fromPoints(Offset.zero,
+            Offset(image.width.toDouble(), image.height.toDouble())),
+        Rect.fromPoints(position - scaledSize / 2, position + scaledSize / 2),
+        Paint());
   }
 
   /// Calculates the size of the rendered object.
   @override
   Size getSize({double minWidth = 0.0, double maxWidth = double.infinity}) {
-    // Generate the text as a visual layout
-    textPainter.layout(minWidth: minWidth, maxWidth: maxWidth * scale);
-    return textPainter.size;
+    return Size(image.width * scale, image.height * scale);
   }
 }
