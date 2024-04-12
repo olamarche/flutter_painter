@@ -1,3 +1,4 @@
+import 'package:collection/equality.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
@@ -70,6 +71,22 @@ class LineDrawable extends Sized1DDrawable implements ShapeDrawable {
       paint: paint ?? this.paint,
       locked: locked ?? this.locked,
     );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is LineDrawable &&
+        other.runtimeType == runtimeType &&
+        other.hidden == hidden &&
+        SetEquality().equals(other.assists, assists) &&
+        other.position == position &&
+        other.rotationAngle == rotationAngle &&
+        other.scale == scale &&
+        other.length == length &&
+        other.paint == paint &&
+        other.locked == locked;
   }
 
   /// Compares two [LineDrawable]s for equality.

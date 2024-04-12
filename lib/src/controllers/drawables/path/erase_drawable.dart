@@ -1,3 +1,4 @@
+import 'package:collection/equality.dart';
 import 'package:flutter/material.dart';
 import 'path_drawable.dart';
 
@@ -34,6 +35,17 @@ class EraseDrawable extends PathDrawable {
     ..strokeJoin = StrokeJoin.round
     ..blendMode = BlendMode.clear
     ..strokeWidth = strokeWidth;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is EraseDrawable &&
+        other.runtimeType == runtimeType &&
+        other.hidden == hidden &&
+        ListEquality().equals(other.path, path) &&
+        other.strokeWidth == strokeWidth;
+  }
 
   /// Compares two [EraseDrawable]s for equality.
   // @override

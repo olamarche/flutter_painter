@@ -115,7 +115,7 @@ class _FlutterPainterExampleState extends State<FlutterPainterExample> {
     });
   }
 
-  /// Updates UI when the focus changes
+  /// Updates UI when the focus changesx
   void onFocus() {
     setState(() {});
   }

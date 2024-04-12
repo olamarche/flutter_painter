@@ -1,3 +1,4 @@
+import 'package:collection/equality.dart';
 import 'package:flutter/material.dart';
 
 import 'path_drawable.dart';
@@ -48,6 +49,18 @@ class FreeStyleDrawable extends PathDrawable {
     ..strokeJoin = StrokeJoin.round
     ..color = color
     ..strokeWidth = strokeWidth;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is FreeStyleDrawable &&
+        other.runtimeType == runtimeType &&
+        other.hidden == hidden &&
+        ListEquality().equals(other.path, path) &&
+        other.color == color &&
+        other.strokeWidth == strokeWidth;
+  }
 
   /// Compares two [FreeStyleDrawable]s for equality.
   // @override

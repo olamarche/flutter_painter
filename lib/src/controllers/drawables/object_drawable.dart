@@ -1,3 +1,4 @@
+import 'package:collection/equality.dart';
 import 'package:flutter/material.dart';
 
 import 'drawable.dart';
@@ -140,6 +141,19 @@ abstract class ObjectDrawable extends Drawable {
   /// Implementing/extending classes must implement its behavior to provide the correct size
   /// This size is used by the UI to detect movement, pinching and rotating actions.
   Size getSize({double minWidth = 0.0, double maxWidth = double.infinity});
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is ObjectDrawable &&
+        other.runtimeType == runtimeType &&
+        other.position == position &&
+        other.rotationAngle == rotationAngle &&
+        other.scale == scale &&
+        SetEquality().equals(other.assists, assists) &&
+        MapEquality().equals(other.assistPaints, assistPaints);
+  }
 
   /// Compares two [ObjectDrawable]s for equality.
   // @override

@@ -1,3 +1,4 @@
+import 'package:collection/equality.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
@@ -82,6 +83,22 @@ class OvalDrawable extends Sized2DDrawable implements ShapeDrawable {
   Size getSize({double minWidth = 0.0, double maxWidth = double.infinity}) {
     final size = super.getSize();
     return Size(size.width, size.height);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is OvalDrawable &&
+        other.runtimeType == runtimeType &&
+        other.hidden == hidden &&
+        SetEquality().equals(other.assists, assists) &&
+        other.position == position &&
+        other.rotationAngle == rotationAngle &&
+        other.scale == scale &&
+        other.size == size &&
+        other.paint == paint &&
+        other.locked == locked;
   }
 
   /// Compares two [OvalDrawable]s for equality.
