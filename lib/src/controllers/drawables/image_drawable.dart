@@ -12,6 +12,7 @@ class ImageDrawable extends ObjectDrawable {
 
   /// Creates an [ImageDrawable] with the given [image].
   ImageDrawable({
+    required String id,
     required Offset position,
     double rotationAngle = 0,
     double scale = 1,
@@ -23,6 +24,7 @@ class ImageDrawable extends ObjectDrawable {
     required this.image,
     this.flipped = false,
   }) : super(
+            id: id,
             position: position,
             rotationAngle: rotationAngle,
             scale: scale,
@@ -37,6 +39,7 @@ class ImageDrawable extends ObjectDrawable {
   /// For example, if the image was 512x256 and the provided size was 128x128, the scale would be 0.25,
   /// fitting the width of the image into the size (128x64).
   ImageDrawable.fittedToSize({
+    required String id,
     required Offset position,
     required Size size,
     double rotationAngle = 0,
@@ -48,6 +51,7 @@ class ImageDrawable extends ObjectDrawable {
     required Image image,
     bool flipped = false,
   }) : this(
+            id: id,
             position: position,
             rotationAngle: rotationAngle,
             scale: _calculateScaleFittedToSize(image, size),
@@ -61,7 +65,8 @@ class ImageDrawable extends ObjectDrawable {
   /// Creates a copy of this but with the given fields replaced with the new values.
   @override
   ImageDrawable copyWith(
-      {bool? hidden,
+      {String? id,
+      bool? hidden,
       Set<ObjectDrawableAssist>? assists,
       Offset? position,
       double? rotation,
@@ -70,6 +75,7 @@ class ImageDrawable extends ObjectDrawable {
       bool? flipped,
       bool? locked}) {
     return ImageDrawable(
+      id: id ?? this.id,
       hidden: hidden ?? this.hidden,
       assists: assists ?? this.assists,
       position: position ?? this.position,

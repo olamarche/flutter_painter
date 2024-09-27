@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
+
 import '../drawables/shape/arrow_drawable.dart';
 import 'shape_factory.dart';
 
@@ -15,6 +17,7 @@ class ArrowFactory extends ShapeFactory<ArrowDrawable> {
   @override
   ArrowDrawable create(Offset position, [Paint? paint]) {
     return ArrowDrawable(
+        id: UniqueKey().toString(),
         length: 0,
         position: position,
         paint: paint,

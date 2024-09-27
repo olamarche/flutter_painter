@@ -8,10 +8,11 @@ class GroupedDrawable extends Drawable {
 
   /// Creates a new [GroupedDrawable] with the list of [drawables].
   GroupedDrawable({
+    required String id,
     required List<Drawable> drawables,
     bool hidden = false,
   })  : drawables = List.unmodifiable(drawables),
-        super(hidden: hidden);
+        super(id: id, hidden: hidden);
 
   /// Draw all the drawables in the group on [canvas] of [size].
   @override

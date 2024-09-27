@@ -18,6 +18,7 @@ class RectangleDrawable extends Sized2DDrawable implements ShapeDrawable {
 
   /// Creates a new [RectangleDrawable] with the given [size], [paint] and [borderRadius].
   RectangleDrawable({
+    required String id,
     Paint? paint,
     required Size size,
     required Offset position,
@@ -31,6 +32,7 @@ class RectangleDrawable extends Sized2DDrawable implements ShapeDrawable {
     this.borderRadius = const BorderRadius.all(Radius.circular(5)),
   })  : paint = paint ?? ShapeDrawable.defaultPaint,
         super(
+            id: id,
             size: size,
             position: position,
             rotationAngle: rotationAngle,
@@ -68,6 +70,7 @@ class RectangleDrawable extends Sized2DDrawable implements ShapeDrawable {
   /// Creates a copy of this but with the given fields replaced with the new values.
   @override
   RectangleDrawable copyWith({
+    String? id,
     bool? hidden,
     Set<ObjectDrawableAssist>? assists,
     Offset? position,
@@ -79,6 +82,7 @@ class RectangleDrawable extends Sized2DDrawable implements ShapeDrawable {
     BorderRadius? borderRadius,
   }) {
     return RectangleDrawable(
+      id: id ?? this.id,
       hidden: hidden ?? this.hidden,
       assists: assists ?? this.assists,
       position: position ?? this.position,

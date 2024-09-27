@@ -8,19 +8,22 @@ class EraseDrawable extends PathDrawable {
   ///
   /// The path will be erased with the passed [strokeWidth] if provided.
   EraseDrawable({
+    required String id,
     required List<Offset> path,
     double strokeWidth = 1,
     bool hidden = false,
-  }) : super(path: path, strokeWidth: strokeWidth, hidden: hidden);
+  }) : super(id: id, path: path, strokeWidth: strokeWidth, hidden: hidden);
 
   /// Creates a copy of this but with the given fields replaced with the new values.
   @override
   EraseDrawable copyWith({
+    String? id,
     bool? hidden,
     List<Offset>? path,
     double? strokeWidth,
   }) {
     return EraseDrawable(
+      id: id ?? this.id,
       path: path ?? this.path,
       strokeWidth: strokeWidth ?? this.strokeWidth,
       hidden: hidden ?? this.hidden,

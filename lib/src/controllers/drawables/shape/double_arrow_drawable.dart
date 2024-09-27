@@ -19,6 +19,7 @@ class DoubleArrowDrawable extends Sized1DDrawable implements ShapeDrawable {
 
   /// Creates a new [DoubleArrowDrawable] with the given [length], [paint] and [arrowHeadSize].
   DoubleArrowDrawable({
+    required String id,
     Paint? paint,
     this.arrowHeadSize,
     required double length,
@@ -32,6 +33,7 @@ class DoubleArrowDrawable extends Sized1DDrawable implements ShapeDrawable {
     bool hidden = false,
   })  : paint = paint ?? ShapeDrawable.defaultPaint,
         super(
+            id: id,
             length: length,
             position: position,
             rotationAngle: rotationAngle,
@@ -88,6 +90,7 @@ class DoubleArrowDrawable extends Sized1DDrawable implements ShapeDrawable {
   /// Creates a copy of this but with the given fields replaced with the new values.
   @override
   DoubleArrowDrawable copyWith({
+    String? id,
     bool? hidden,
     Set<ObjectDrawableAssist>? assists,
     Offset? position,
@@ -99,6 +102,7 @@ class DoubleArrowDrawable extends Sized1DDrawable implements ShapeDrawable {
     double? arrowHeadSize,
   }) {
     return DoubleArrowDrawable(
+      id: id ?? this.id,
       hidden: hidden ?? this.hidden,
       assists: assists ?? this.assists,
       position: position ?? this.position,

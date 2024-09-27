@@ -55,6 +55,7 @@ abstract class ObjectDrawable extends Drawable {
 
   /// Default constructor for [ObjectDrawable].
   const ObjectDrawable({
+    required String id,
     required this.position,
     this.rotationAngle = 0,
     double scale = 1,
@@ -63,7 +64,7 @@ abstract class ObjectDrawable extends Drawable {
     this.locked = false,
     bool hidden = false,
   })  : scale = scale < minScale ? minScale : scale,
-        super(hidden: hidden);
+        super(id: id, hidden: hidden);
 
   /// Draws any assist lines that the object has on [canvas] with [size].
   void drawAssists(Canvas canvas, Size size) {
@@ -172,6 +173,7 @@ abstract class ObjectDrawable extends Drawable {
   /// Extending classes must at least have the defined named parameters in their method
   /// implementation, but can add any extra parameters relevant to that class.
   ObjectDrawable copyWith({
+    String? id,
     bool? hidden,
     Set<ObjectDrawableAssist>? assists,
     Offset? position,

@@ -317,6 +317,7 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
           );
 
     final SoundDrawable drawable = SoundDrawable(
+        id: UniqueKey().toString(),
         sound: sound,
         position: center,
         image: image,
@@ -354,10 +355,14 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
     final ImageDrawable drawable;
 
     if (size == null) {
-      drawable = ImageDrawable(image: image, position: center);
+      drawable = ImageDrawable(
+          id: UniqueKey().toString(), image: image, position: center);
     } else {
       drawable = ImageDrawable.fittedToSize(
-          image: image, position: center, size: size);
+          id: UniqueKey().toString(),
+          image: image,
+          position: center,
+          size: size);
     }
 
     addDrawables([drawable]);
@@ -425,7 +430,7 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
 
   void selectedMultiDrawables(ObjectDrawable drawable,
       {bool newAction = true}) {
-    List<ObjectDrawable> sltDrawables = selectedDrawables ?? [];
+    List<ObjectDrawable> sltDrawables = selectedDrawables;
 
     if (sltDrawables.contains(drawable)) {
       removeSelectedDrawables(drawable, newAction: newAction);
@@ -514,9 +519,12 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
     ObjectDrawable fist = currentSelectedDrawables.first;
     double minDx = leftX(fist);
     // ignore: avoid_function_literals_in_foreach_calls
-    currentSelectedDrawables.forEach((item) => {
-          if (leftX(item) < minDx) {minDx = leftX(item)}
-        });
+    currentSelectedDrawables.forEach((item) {
+      if (leftX(item) < minDx) {
+        minDx = leftX(item);
+      }
+      ;
+    });
 
     //New Drawables
     List<ObjectDrawable> newSelectedDrawables = [];
@@ -544,10 +552,16 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
     double minDx = leftX(fist);
     double maxDx = rightX(fist);
     // ignore: avoid_function_literals_in_foreach_calls
-    currentSelectedDrawables.forEach((item) => {
-          if (leftX(item) < minDx) {minDx = leftX(item)},
-          if (rightX(item) > maxDx) {maxDx = rightX(item)}
-        });
+    currentSelectedDrawables.forEach((item) {
+      if (leftX(item) < minDx) {
+        minDx = leftX(item);
+      }
+      ;
+      if (rightX(item) > maxDx) {
+        maxDx = rightX(item);
+      }
+      ;
+    });
     double center = (minDx + maxDx) / 2;
 
     //New Drawables
@@ -575,9 +589,12 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
     ObjectDrawable fist = currentSelectedDrawables.first;
     double maxDx = rightX(fist);
     // ignore: avoid_function_literals_in_foreach_calls
-    currentSelectedDrawables.forEach((item) => {
-          if (rightX(item) > maxDx) {maxDx = rightX(item)}
-        });
+    currentSelectedDrawables.forEach((item) {
+      if (rightX(item) > maxDx) {
+        maxDx = rightX(item);
+      }
+      ;
+    });
 
     //New Drawables
     List<ObjectDrawable> newSelectedDrawables = [];
@@ -606,11 +623,17 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
     double maxDx = rightX(fist);
     double sumWidth = 0;
     // ignore: avoid_function_literals_in_foreach_calls
-    currentSelectedDrawables.forEach((item) => {
-          if (leftX(item) < minDx) {minDx = leftX(item)},
-          if (rightX(item) > maxDx) {maxDx = rightX(item)},
-          sumWidth += item.getSize().width,
-        });
+    currentSelectedDrawables.forEach((item) {
+      if (leftX(item) < minDx) {
+        minDx = leftX(item);
+      }
+      ;
+      if (rightX(item) > maxDx) {
+        maxDx = rightX(item);
+      }
+      ;
+      sumWidth += item.getSize().width;
+    });
     double space =
         (maxDx - minDx - sumWidth) / (currentSelectedDrawables.length - 1);
 
@@ -655,11 +678,17 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
     double maxDy = topY(fist);
     double sumHeight = 0;
     // ignore: avoid_function_literals_in_foreach_calls
-    currentSelectedDrawables.forEach((item) => {
-          if (bottomY(item) < minDy) {minDy = bottomY(item)},
-          if (topY(item) > maxDy) {maxDy = topY(item)},
-          sumHeight += item.getSize().height,
-        });
+    currentSelectedDrawables.forEach((item) {
+      if (bottomY(item) < minDy) {
+        minDy = bottomY(item);
+      }
+      ;
+      if (topY(item) > maxDy) {
+        maxDy = topY(item);
+      }
+      ;
+      sumHeight += item.getSize().height;
+    });
     double space =
         (maxDy - minDy - sumHeight) / (currentSelectedDrawables.length - 1);
 
@@ -743,10 +772,8 @@ class PainterControllerValue {
   PainterControllerValue copyWith({
     PainterSettings? settings,
     List<Drawable>? drawables,
-    BackgroundDrawable? background =
-        _NoBackgroundPassedBackgroundDrawable.instance,
-    ObjectDrawable? selectedObjectDrawable =
-        _NoObjectPassedBackgroundDrawable.instance,
+    BackgroundDrawable? background,
+    ObjectDrawable? selectedObjectDrawable,
     List<ObjectDrawable>? selectedDrawables,
     bool? isMultiselect,
   }) {
@@ -795,11 +822,11 @@ class PainterControllerValue {
 /// [BackgroundDrawable] argument passed for [PainterControllerValue.copyWith].
 class _NoBackgroundPassedBackgroundDrawable extends BackgroundDrawable {
   /// Single instance.
-  static const _NoBackgroundPassedBackgroundDrawable instance =
+  static final _NoBackgroundPassedBackgroundDrawable instance =
       _NoBackgroundPassedBackgroundDrawable._();
 
   /// Private constructor.
-  const _NoBackgroundPassedBackgroundDrawable._() : super();
+  const _NoBackgroundPassedBackgroundDrawable._() : super(id: '');
 
   /// Unimplemented implementation of the draw method.
   @override
@@ -813,18 +840,20 @@ class _NoBackgroundPassedBackgroundDrawable extends BackgroundDrawable {
 /// [BackgroundDrawable] argument passed for [PainterControllerValue.copyWith].
 class _NoObjectPassedBackgroundDrawable extends ObjectDrawable {
   /// Single instance.
-  static const _NoObjectPassedBackgroundDrawable instance =
+  static final _NoObjectPassedBackgroundDrawable instance =
       _NoObjectPassedBackgroundDrawable._();
 
   /// Private constructor.
   const _NoObjectPassedBackgroundDrawable._()
       : super(
+          id: '',
           position: const Offset(0, 0),
         );
 
   @override
   ObjectDrawable copyWith(
-      {bool? hidden,
+      {String? id,
+      bool? hidden,
       Set<ObjectDrawableAssist>? assists,
       ui.Offset? position,
       double? rotation,

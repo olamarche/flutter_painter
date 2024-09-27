@@ -12,6 +12,7 @@ class FreeStyleDrawable extends PathDrawable {
   ///
   /// The path will be drawn with the passed [color] and [strokeWidth] if provided.
   FreeStyleDrawable({
+    required String id,
     required List<Offset> path,
     double strokeWidth = 1,
     this.color = Colors.black,
@@ -23,17 +24,19 @@ class FreeStyleDrawable extends PathDrawable {
         // The line cannot have a non-positive stroke width.
         assert(strokeWidth > 0,
             'The stroke width cannot be less than or equal to 0'),
-        super(path: path, strokeWidth: strokeWidth, hidden: hidden);
+        super(id: id, path: path, strokeWidth: strokeWidth, hidden: hidden);
 
   /// Creates a copy of this but with the given fields replaced with the new values.
   @override
   FreeStyleDrawable copyWith({
+    String? id,
     bool? hidden,
     List<Offset>? path,
     Color? color,
     double? strokeWidth,
   }) {
     return FreeStyleDrawable(
+      id: id ?? this.id,
       path: path ?? this.path,
       color: color ?? this.color,
       strokeWidth: strokeWidth ?? this.strokeWidth,

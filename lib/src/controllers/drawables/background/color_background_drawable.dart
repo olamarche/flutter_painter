@@ -9,7 +9,11 @@ class ColorBackgroundDrawable extends BackgroundDrawable {
   final Color color;
 
   /// Creates a [ColorBackgroundDrawable] to use a color as a background.
-  const ColorBackgroundDrawable({required this.color});
+  const ColorBackgroundDrawable({
+    required String id,
+    required this.color,
+    bool hidden = false,
+  }) : super(id: id, hidden: hidden);
 
   /// Draws the background on the provided [canvas] of size [size].
   @override
@@ -31,6 +35,6 @@ class ColorBackgroundDrawable extends BackgroundDrawable {
 /// An extension on Color to create a background drawable easily.
 extension ColorBackgroundDrawableGetter on Color {
   /// Returns an [ColorBackgroundDrawable] of the current [Color].
-  ColorBackgroundDrawable get backgroundDrawable =>
-      ColorBackgroundDrawable(color: this);
+  ColorBackgroundDrawable backgroundDrawable({required String id}) =>
+      ColorBackgroundDrawable(id: id, color: this);
 }

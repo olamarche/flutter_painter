@@ -14,6 +14,7 @@ class OvalDrawable extends Sized2DDrawable implements ShapeDrawable {
 
   /// Creates a new [OvalDrawable] with the given [size] and [paint].
   OvalDrawable({
+    required String id,
     Paint? paint,
     required Size size,
     required Offset position,
@@ -26,6 +27,7 @@ class OvalDrawable extends Sized2DDrawable implements ShapeDrawable {
     bool hidden = false,
   })  : paint = paint ?? ShapeDrawable.defaultPaint,
         super(
+            id: id,
             size: size,
             position: position,
             rotationAngle: rotationAngle,
@@ -57,6 +59,7 @@ class OvalDrawable extends Sized2DDrawable implements ShapeDrawable {
   /// Creates a copy of this but with the given fields replaced with the new values.
   @override
   OvalDrawable copyWith({
+    String? id,
     bool? hidden,
     Set<ObjectDrawableAssist>? assists,
     Offset? position,
@@ -67,6 +70,7 @@ class OvalDrawable extends Sized2DDrawable implements ShapeDrawable {
     bool? locked,
   }) {
     return OvalDrawable(
+      id: id ?? this.id,
       hidden: hidden ?? this.hidden,
       assists: assists ?? this.assists,
       position: position ?? this.position,

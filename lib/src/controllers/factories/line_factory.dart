@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
+
 import '../drawables/shape/line_drawable.dart';
 import 'shape_factory.dart';
 
@@ -11,6 +13,10 @@ class LineFactory extends ShapeFactory<LineDrawable> {
   /// Creates and returns a [LineDrawable] with length of 0 and the passed [position] and [paint].
   @override
   LineDrawable create(Offset position, [Paint? paint]) {
-    return LineDrawable(length: 0, position: position, paint: paint);
+    return LineDrawable(
+        id: UniqueKey().toString(),
+        length: 0,
+        position: position,
+        paint: paint);
   }
 }

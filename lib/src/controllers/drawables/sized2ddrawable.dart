@@ -10,6 +10,7 @@ abstract class Sized2DDrawable extends ObjectDrawable {
 
   /// Creates a new [Sized2DDrawable] with the given [size] and [painting].
   const Sized2DDrawable({
+    required String id,
     required this.size,
     required Offset position,
     double rotationAngle = 0,
@@ -20,6 +21,7 @@ abstract class Sized2DDrawable extends ObjectDrawable {
     bool locked = false,
     bool hidden = false,
   }) : super(
+            id: id,
             position: position,
             rotationAngle: rotationAngle,
             scale: scale,
@@ -38,6 +40,7 @@ abstract class Sized2DDrawable extends ObjectDrawable {
   /// Creates a copy of this but with the given fields replaced with the new values.
   @override
   Sized2DDrawable copyWith({
+    String? id,
     bool? hidden,
     Set<ObjectDrawableAssist>? assists,
     Offset? position,

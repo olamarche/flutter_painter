@@ -19,6 +19,7 @@ class ArrowDrawable extends Sized1DDrawable implements ShapeDrawable {
 
   /// Creates a new [ArrowDrawable] with the given [length], [paint] and [arrowHeadSize].
   ArrowDrawable({
+    required String id,
     Paint? paint,
     this.arrowHeadSize,
     required double length,
@@ -32,6 +33,7 @@ class ArrowDrawable extends Sized1DDrawable implements ShapeDrawable {
     bool hidden = false,
   })  : paint = paint ?? ShapeDrawable.defaultPaint,
         super(
+            id: id,
             length: length,
             position: position,
             rotationAngle: rotationAngle,
@@ -83,6 +85,7 @@ class ArrowDrawable extends Sized1DDrawable implements ShapeDrawable {
   /// Creates a copy of this but with the given fields replaced with the new values.
   @override
   ArrowDrawable copyWith({
+    String? id,
     bool? hidden,
     Set<ObjectDrawableAssist>? assists,
     Offset? position,
@@ -94,6 +97,7 @@ class ArrowDrawable extends Sized1DDrawable implements ShapeDrawable {
     double? arrowHeadSize,
   }) {
     return ArrowDrawable(
+      id: id ?? this.id,
       hidden: hidden ?? this.hidden,
       assists: assists ?? this.assists,
       position: position ?? this.position,
@@ -113,26 +117,12 @@ class ArrowDrawable extends Sized1DDrawable implements ShapeDrawable {
     return Size(size.width, size.height);
   }
 
-  /// Compares two [ArrowDrawable]s for equality.
+  // Compares two [ArrowDrawable]s for equality.
+  @override
+  bool operator ==(Object other) {
+    return other is ArrowDrawable && other.id == id && other.hidden == hidden;
+  }
+
   // @override
-  // bool operator ==(Object other) {
-  //   return other is ArrowDrawable &&
-  //       super == other &&
-  //       other.paint == paint &&
-  //       other.length == length &&
-  //       other.arrowHeadSize == arrowHeadSize;
-  // }
-  //
-  // @override
-  // int get hashCode => hashValues(
-  //     hidden,
-  //     locked,
-  //     hashList(assists),
-  //     hashList(assistPaints.entries),
-  //     position,
-  //     rotationAngle,
-  //     scale,
-  //     paint,
-  //     length,
-  //     arrowHeadSize);
+  //int get hashCode => Object.hash(id, hidden);
 }

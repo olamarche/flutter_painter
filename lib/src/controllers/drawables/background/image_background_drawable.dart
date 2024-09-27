@@ -11,7 +11,11 @@ class ImageBackgroundDrawable extends BackgroundDrawable {
   final Image image;
 
   /// Creates a [ImageBackgroundDrawable] to use an image as a background.
-  const ImageBackgroundDrawable({required this.image});
+  const ImageBackgroundDrawable({
+    required String id,
+    required this.image,
+    bool hidden = false,
+  }) : super(id: id, hidden: hidden);
 
   /// Draws the image on the provided [canvas] of size [size].
   @override
@@ -38,6 +42,6 @@ class ImageBackgroundDrawable extends BackgroundDrawable {
 /// An extension on ui.Image to create a background drawable easily.
 extension ImageBackgroundDrawableGetter on Image {
   /// Returns an [ImageBackgroundDrawable] of the current [Image].
-  ImageBackgroundDrawable get backgroundDrawable =>
-      ImageBackgroundDrawable(image: this);
+  ImageBackgroundDrawable backgroundDrawable({required String id}) =>
+      ImageBackgroundDrawable(id: id, image: this);
 }

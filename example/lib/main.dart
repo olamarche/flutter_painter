@@ -111,7 +111,9 @@ class _FlutterPainterExampleState extends State<FlutterPainterExample> {
 
     setState(() {
       backgroundImage = image;
-      controller.background = image.backgroundDrawable;
+      controller.background = image.backgroundDrawable(
+        id: UniqueKey().toString(),
+      );
     });
   }
 

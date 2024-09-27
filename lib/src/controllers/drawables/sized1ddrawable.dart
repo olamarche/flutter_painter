@@ -13,6 +13,7 @@ abstract class Sized1DDrawable extends ObjectDrawable {
 
   /// Creates a new [Sized1DDrawable] with the given [length] and [padding].
   const Sized1DDrawable({
+    required String id,
     required this.length,
     required Offset position,
     double rotationAngle = 0,
@@ -23,6 +24,7 @@ abstract class Sized1DDrawable extends ObjectDrawable {
     bool locked = false,
     bool hidden = false,
   }) : super(
+            id: id,
             position: position,
             rotationAngle: rotationAngle,
             scale: scale,
@@ -41,6 +43,7 @@ abstract class Sized1DDrawable extends ObjectDrawable {
   /// Creates a copy of this but with the given fields replaced with the new values.
   @override
   Sized1DDrawable copyWith({
+    String? id,
     bool? hidden,
     Set<ObjectDrawableAssist>? assists,
     Offset? position,

@@ -2,11 +2,13 @@ import 'dart:ui';
 
 /// Abstract class to define a drawable object.
 abstract class Drawable {
+  final String id;
+
   /// Whether the drawable is hidden or not.
   final bool hidden;
 
   /// Default constructor.
-  const Drawable({this.hidden = false});
+  const Drawable({required this.id, this.hidden = false});
 
   /// Draws the drawable on the provided [canvas] of size [size].
   void draw(Canvas canvas, Size size);
@@ -15,14 +17,12 @@ abstract class Drawable {
 
   bool get isNotHidden => !hidden;
 
-  /// Checks equality between two [Drawable]s.
+  /// equality between two [Drawable]s.
+  @override
+  bool operator ==(Object other) {
+    return other is Drawable && other.id == id && other.hidden == hidden;
+  }
+
   // @override
-  // bool operator ==(Object other) {
-  //   return other is Drawable && other.hidden == hidden;
-  // }
-  //
-  // @override
-  // int get hashCode {
-  //   return hidden.hashCode;
-  // }
+  // int get hashCode => Object.hash(id, hidden);
 }

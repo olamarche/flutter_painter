@@ -23,6 +23,7 @@ class TextDrawable extends ObjectDrawable {
   ///
   /// The path will be drawn with the passed [style] if provided.
   TextDrawable({
+    required String id,
     required this.text,
     required Offset position,
     double rotation = 0,
@@ -43,6 +44,7 @@ class TextDrawable extends ObjectDrawable {
           textDirection: direction,
         ),
         super(
+            id: id,
             position: position,
             rotationAngle: rotation,
             scale: scale,
@@ -66,6 +68,7 @@ class TextDrawable extends ObjectDrawable {
   /// Creates a copy of this but with the given fields replaced with the new values.
   @override
   TextDrawable copyWith({
+    String? id,
     bool? hidden,
     Set<ObjectDrawableAssist>? assists,
     String? text,
@@ -78,6 +81,7 @@ class TextDrawable extends ObjectDrawable {
     TextAlign? textAlign,
   }) {
     return TextDrawable(
+      id: id ?? this.id,
       text: text ?? this.text,
       position: position ?? this.position,
       rotation: rotation ?? rotationAngle,

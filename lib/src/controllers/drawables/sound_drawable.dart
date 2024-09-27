@@ -16,6 +16,7 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
 
   /// Creates an [SoundDrawable] with the given [sound].
   SoundDrawable({
+    required String id,
     Paint? paint,
     required Offset position,
     required Size size,
@@ -30,6 +31,7 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
     required this.image,
   })  : paint = paint ?? ShapeDrawable.defaultPaint,
         super(
+            id: id,
             size: size,
             position: position,
             rotationAngle: rotationAngle,
@@ -67,7 +69,8 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
   /// Creates a copy of this but with the given fields replaced with the new values.
   @override
   SoundDrawable copyWith(
-      {bool? hidden,
+      {String? id,
+      bool? hidden,
       Set<ObjectDrawableAssist>? assists,
       Offset? position,
       double? rotation,
@@ -78,6 +81,7 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
       Image? image,
       bool? locked}) {
     return SoundDrawable(
+      id: id ?? this.id,
       hidden: hidden ?? this.hidden,
       assists: assists ?? this.assists,
       position: position ?? this.position,
@@ -95,7 +99,7 @@ class SoundDrawable extends Sized2DDrawable implements ShapeDrawable {
   @override
   void drawObject(Canvas canvas, Size size) {
     final scaledSize =
-        Offset(image.width.toDouble(), image.height!.toDouble()) * scale;
+        Offset(image.width.toDouble(), image.height.toDouble()) * scale;
     // Draw the image onto the canvas.
     //canvas.drawCircle(position, 20, paint.copyWith(style: PaintingStyle.fill));
     canvas.drawImageRect(

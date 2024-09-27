@@ -14,6 +14,7 @@ class LineDrawable extends Sized1DDrawable implements ShapeDrawable {
 
   /// Creates a new [LineDrawable] with the given [length] and [paint].
   LineDrawable({
+    required String id,
     Paint? paint,
     required double length,
     required Offset position,
@@ -26,6 +27,7 @@ class LineDrawable extends Sized1DDrawable implements ShapeDrawable {
     bool hidden = false,
   })  : paint = paint ?? ShapeDrawable.defaultPaint,
         super(
+            id: id,
             length: length,
             position: position,
             rotationAngle: rotationAngle,
@@ -52,6 +54,7 @@ class LineDrawable extends Sized1DDrawable implements ShapeDrawable {
   /// Creates a copy of this but with the given fields replaced with the new values.
   @override
   LineDrawable copyWith({
+    String? id,
     bool? hidden,
     Set<ObjectDrawableAssist>? assists,
     Offset? position,
@@ -62,6 +65,7 @@ class LineDrawable extends Sized1DDrawable implements ShapeDrawable {
     bool? locked,
   }) {
     return LineDrawable(
+      id: id ?? this.id,
       hidden: hidden ?? this.hidden,
       assists: assists ?? this.assists,
       position: position ?? this.position,

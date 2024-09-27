@@ -16,6 +16,7 @@ abstract class ShapeDrawable extends ObjectDrawable {
 
   /// Default constructor for [ObjectDrawable].
   ShapeDrawable({
+    required String id,
     Paint? paint,
     required Offset position,
     double rotationAngle = 0,
@@ -27,6 +28,7 @@ abstract class ShapeDrawable extends ObjectDrawable {
     bool hidden = false,
   })  : paint = paint ?? defaultPaint,
         super(
+            id: id,
             position: position,
             rotationAngle: rotationAngle,
             scale: scale,
@@ -38,6 +40,7 @@ abstract class ShapeDrawable extends ObjectDrawable {
   /// Creates a copy of this but with the given fields replaced with the new values.
   @override
   ShapeDrawable copyWith({
+    String? id,
     bool? hidden,
     Set<ObjectDrawableAssist>? assists,
     Offset? position,

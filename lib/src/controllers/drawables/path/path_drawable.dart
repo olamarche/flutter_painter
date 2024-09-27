@@ -15,6 +15,7 @@ abstract class PathDrawable extends Drawable {
   /// The path will be drawn with the passed [strokeWidth] if provided.
   PathDrawable({
     required this.path,
+    required String id,
     this.strokeWidth = 1,
     bool hidden = false,
   })  :
@@ -24,7 +25,7 @@ abstract class PathDrawable extends Drawable {
         // The line cannot have a non-positive stroke width.
         assert(strokeWidth > 0,
             'The stroke width cannot be less than or equal to 0'),
-        super(hidden: hidden);
+        super(id: id, hidden: hidden);
 
   /// Creates a copy of this but with the given fields replaced with the new values.
   PathDrawable copyWith({
