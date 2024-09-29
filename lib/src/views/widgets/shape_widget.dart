@@ -27,11 +27,38 @@ class _ShapeWidgetState extends State<_ShapeWidget> {
   Widget build(BuildContext context) {
     if (settings.factory == null) return widget.child;
 
-    return GestureDetector(
-      onScaleStart: onScaleStart,
-      onScaleUpdate: onScaleUpdate,
-      onScaleEnd: onScaleEnd,
-      child: widget.child,
+    return MouseRegion(
+      onEnter: (_) => print("Mouse entered"),
+      onExit: (_) => print("Mouse exited"),
+      child: kIsWeb
+          ? Listener(
+              onPointerDown: (event) {
+                if (event.buttons == 1) {
+                  // Detect left mouse button click on web
+                  onScaleStart(ScaleStartDetails(
+                    localFocalPoint: event.localPosition,
+                  ));
+                }
+              },
+              onPointerMove: (event) {
+                if (event.buttons == 1) {
+                  // Detect left mouse button drag on web
+                  onScaleUpdate(ScaleUpdateDetails(
+                    localFocalPoint: event.localPosition,
+                  ));
+                }
+              },
+              onPointerUp: (event) {
+                // Detect mouse button release on web
+                onScaleEnd(ScaleEndDetails());
+              },
+              child: widget.child)
+          : GestureDetector(
+              onScaleStart: onScaleStart,
+              onScaleUpdate: onScaleUpdate,
+              onScaleEnd: onScaleEnd,
+              child: widget.child,
+            ),
     );
   }
 
