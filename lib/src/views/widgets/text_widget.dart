@@ -96,7 +96,6 @@ class _TextWidgetState extends State<_TextWidget> {
       text: '',
       position: center,
       style: settings.textStyle,
-      textAlign: settings.textAlign,
       hidden: true,
     );
     PainterController.of(context).addDrawables([drawable]);
@@ -244,21 +243,13 @@ class EditTextWidgetState extends State<EditTextWidget>
         color: Colors.black38,
         child: Padding(
           padding: EdgeInsets.only(
-            bottom: (keyboardHeight - (screenHeight - height - y))
-                .clamp(0, screenHeight),
-            left: 8,
-            right: 8,
-          ),
+              bottom: (keyboardHeight - (screenHeight - height - y))
+                  .clamp(0, screenHeight)),
           child: Center(
             child: TextField(
               decoration: const InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 0.5, color: Colors.black), //<-- SEE HERE
-                ),
-                border: OutlineInputBorder(),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.zero,
                 isDense: true,
               ),
               cursorColor: Colors.white,
@@ -269,7 +260,7 @@ class EditTextWidgetState extends State<EditTextWidget>
               controller: textEditingController,
               focusNode: textFieldNode,
               style: settings.textStyle,
-              textAlign: settings.textAlign,
+              textAlign: TextAlign.center,
               textAlignVertical: TextAlignVertical.center,
               onEditingComplete: onEditingComplete,
             ),
@@ -286,17 +277,17 @@ class EditTextWidgetState extends State<EditTextWidget>
   @override
   void didChangeMetrics() {
     super.didChangeMetrics();
-    // ignore: deprecated_member_use
     final value = WidgetsBinding.instance.window.viewInsets.bottom;
 
     // If the previous value of bottom view insets is larger than the current value,
     // the keyboard is closing, so lose focus from the focus node
-    if ((value) < bottomViewInsets && textFieldNode.hasFocus) {
+    if ((value ?? bottomViewInsets) < bottomViewInsets &&
+        textFieldNode.hasFocus) {
       textFieldNode.unfocus();
     }
 
     // Update the bottom view insets for next check
-    bottomViewInsets = value;
+    bottomViewInsets = value ?? 0;
   }
 
   /// Listener to focus events for [textFieldNode]
@@ -320,7 +311,6 @@ class EditTextWidgetState extends State<EditTextWidget>
       final drawable = widget.drawable.copyWith(
         text: textEditingController.text.trim(),
         style: settings.textStyle,
-        textAlign: settings.textAlign,
         hidden: false,
       );
       updateDrawable(widget.drawable, drawable);
