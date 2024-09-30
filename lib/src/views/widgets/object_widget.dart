@@ -699,7 +699,7 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
   void tapDrawable(ObjectDrawable drawable) {
     //if (drawable.locked) return;
     if (controller?.isMultiselect == false) {
-      if (controller?.selectedObjectDrawable == drawable) {
+      if (controller?.selectedObjectDrawable?.id == drawable.id) {
         ObjectDrawableReselectedNotification(drawable).dispatch(context);
       } else {
         SelectedObjectDrawableUpdatedNotification(drawable).dispatch(context);
