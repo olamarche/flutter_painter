@@ -849,7 +849,7 @@ class _NoObjectPassedBackgroundDrawable extends ObjectDrawable {
   /// Private constructor.
   const _NoObjectPassedBackgroundDrawable._()
       : super(
-          id: '__no_passed_passed__',
+          id: '__no_object_passed__',
           position: const Offset(0, 0),
         );
 
