@@ -151,8 +151,9 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
                   onTap: onBackgroundTapped, child: widget.child)),
           ...drawables.asMap().entries.map((entry) {
             final drawable = entry.value;
-            final selected = drawable == controller?.selectedObjectDrawable ||
-                selectedDrawables.contains(drawable);
+            final selected =
+                drawable.id == controller?.selectedObjectDrawable?.id ||
+                    selectedDrawables.contains(drawable);
             final size = drawable.getSize(maxWidth: constraints.maxWidth);
             final widget = Padding(
               padding: EdgeInsets.all(objectPadding),
@@ -691,6 +692,9 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
       controller?.clearSelectedDrawables();
       controller?.deselectObjectDrawable();
     });
+
+    print(
+        'Deselected. Current selected: ${controller?.selectedObjectDrawable?.id}');
   }
 
   /// Callback when an object is tapped.
@@ -721,6 +725,8 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
         controller?.selectedMultiDrawables(drawable);
       });
     }
+
+    print('Selected drawable: ${controller?.selectedObjectDrawable?.id}');
   }
 
   void onLongPressDrawable(ObjectDrawable drawable) {
