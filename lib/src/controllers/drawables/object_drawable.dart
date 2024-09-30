@@ -148,13 +148,13 @@ abstract class ObjectDrawable extends Drawable {
     if (identical(this, other)) return true;
 
     return other is ObjectDrawable &&
-        other.runtimeType == runtimeType &&
-        other.id == id &&
-        other.position == position &&
-        other.rotationAngle == rotationAngle &&
-        other.scale == scale &&
-        SetEquality().equals(other.assists, assists) &&
-        MapEquality().equals(other.assistPaints, assistPaints);
+        other.runtimeType == this.runtimeType &&
+        other.id == this.id &&
+        other.position == this.position &&
+        other.rotationAngle == this.rotationAngle &&
+        other.scale == this.scale &&
+        SetEquality().equals(other.assists, this.assists) &&
+        MapEquality().equals(other.assistPaints, this.assistPaints);
   }
 
   /// Compares two [ObjectDrawable]s for equality.

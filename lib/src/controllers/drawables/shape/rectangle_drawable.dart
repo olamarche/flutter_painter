@@ -107,16 +107,17 @@ class RectangleDrawable extends Sized2DDrawable implements ShapeDrawable {
     if (identical(this, other)) return true;
 
     return other is RectangleDrawable &&
-        other.runtimeType == runtimeType &&
-        other.hidden == hidden &&
-        SetEquality().equals(other.assists, assists) &&
-        other.position == position &&
-        other.rotationAngle == rotationAngle &&
-        other.scale == scale &&
-        other.size == size &&
-        other.paint == paint &&
-        other.locked == locked &&
-        other.borderRadius == borderRadius;
+        other.id == this.id &&
+        other.runtimeType == this.runtimeType &&
+        other.hidden == this.hidden &&
+        SetEquality().equals(other.assists, this.assists) &&
+        other.position == this.position &&
+        other.rotationAngle == this.rotationAngle &&
+        other.scale == this.scale &&
+        other.size == this.size &&
+        other.paint == this.paint &&
+        other.locked == this.locked &&
+        other.borderRadius == this.borderRadius;
   }
 
   /// Compares two [RectangleDrawable]s for equality.

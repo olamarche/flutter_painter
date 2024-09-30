@@ -782,11 +782,13 @@ class PainterControllerValue {
       drawables: drawables ?? _drawables,
       background: background == _NoBackgroundPassedBackgroundDrawable.instance
           ? this.background
-          : background,
+          : (background?.id == '__no_background_passed__' ? null : background),
       selectedObjectDrawable:
           selectedObjectDrawable == _NoObjectPassedBackgroundDrawable.instance
               ? this.selectedObjectDrawable
-              : selectedObjectDrawable,
+              : (selectedObjectDrawable?.id == '__no_object_passed__'
+                  ? null
+                  : selectedObjectDrawable),
       selectedDrawables: selectedDrawables ?? this.selectedDrawables,
       isMultiselect: isMultiselect ?? this.isMultiselect,
     );
@@ -826,7 +828,8 @@ class _NoBackgroundPassedBackgroundDrawable extends BackgroundDrawable {
       _NoBackgroundPassedBackgroundDrawable._();
 
   /// Private constructor.
-  const _NoBackgroundPassedBackgroundDrawable._() : super(id: '');
+  const _NoBackgroundPassedBackgroundDrawable._()
+      : super(id: '__no_background_passed__');
 
   /// Unimplemented implementation of the draw method.
   @override
@@ -846,7 +849,7 @@ class _NoObjectPassedBackgroundDrawable extends ObjectDrawable {
   /// Private constructor.
   const _NoObjectPassedBackgroundDrawable._()
       : super(
-          id: '',
+          id: '__no_passed_passed__',
           position: const Offset(0, 0),
         );
 
