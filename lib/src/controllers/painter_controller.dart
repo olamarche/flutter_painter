@@ -23,6 +23,7 @@ import 'drawables/background/background_drawable.dart';
 import 'drawables/object_drawable.dart';
 import 'settings/settings.dart';
 import '../views/painters/painter.dart';
+import 'package:uuid/uuid.dart';
 
 import 'drawables/drawable.dart';
 
@@ -31,6 +32,8 @@ import 'drawables/drawable.dart';
 /// * IMPORTANT: *
 /// Each [FlutterPainter] should have its own controller.
 class PainterController extends ValueNotifier<PainterControllerValue> {
+  final Uuid _uuid = const Uuid();
+
   /// A controller for an event stream which widgets will listen to.
   ///
   /// This will dispatch events that represent actions, such as adding a new text drawable.
@@ -317,7 +320,7 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
           );
 
     final SoundDrawable drawable = SoundDrawable(
-        id: UniqueKey().toString(),
+        id: _uuid.v4(),
         sound: sound,
         position: center,
         image: image,
@@ -355,14 +358,10 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
     final ImageDrawable drawable;
 
     if (size == null) {
-      drawable = ImageDrawable(
-          id: UniqueKey().toString(), image: image, position: center);
+      drawable = ImageDrawable(id: _uuid.v4(), image: image, position: center);
     } else {
       drawable = ImageDrawable.fittedToSize(
-          id: UniqueKey().toString(),
-          image: image,
-          position: center,
-          size: size);
+          id: _uuid.v4(), image: image, position: center, size: size);
     }
 
     addDrawables([drawable]);
@@ -523,7 +522,6 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
       if (leftX(item) < minDx) {
         minDx = leftX(item);
       }
-      ;
     });
 
     //New Drawables
@@ -556,11 +554,9 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
       if (leftX(item) < minDx) {
         minDx = leftX(item);
       }
-      ;
       if (rightX(item) > maxDx) {
         maxDx = rightX(item);
       }
-      ;
     });
     double center = (minDx + maxDx) / 2;
 
@@ -593,7 +589,6 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
       if (rightX(item) > maxDx) {
         maxDx = rightX(item);
       }
-      ;
     });
 
     //New Drawables
@@ -627,11 +622,9 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
       if (leftX(item) < minDx) {
         minDx = leftX(item);
       }
-      ;
       if (rightX(item) > maxDx) {
         maxDx = rightX(item);
       }
-      ;
       sumWidth += item.getSize().width;
     });
     double space =
@@ -682,11 +675,9 @@ class PainterController extends ValueNotifier<PainterControllerValue> {
       if (bottomY(item) < minDy) {
         minDy = bottomY(item);
       }
-      ;
       if (topY(item) > maxDy) {
         maxDy = topY(item);
       }
-      ;
       sumHeight += item.getSize().height;
     });
     double space =
@@ -824,7 +815,7 @@ class PainterControllerValue {
 /// [BackgroundDrawable] argument passed for [PainterControllerValue.copyWith].
 class _NoBackgroundPassedBackgroundDrawable extends BackgroundDrawable {
   /// Single instance.
-  static final _NoBackgroundPassedBackgroundDrawable instance =
+  static const _NoBackgroundPassedBackgroundDrawable instance =
       _NoBackgroundPassedBackgroundDrawable._();
 
   /// Private constructor.
@@ -843,7 +834,7 @@ class _NoBackgroundPassedBackgroundDrawable extends BackgroundDrawable {
 /// [BackgroundDrawable] argument passed for [PainterControllerValue.copyWith].
 class _NoObjectPassedBackgroundDrawable extends ObjectDrawable {
   /// Single instance.
-  static final _NoObjectPassedBackgroundDrawable instance =
+  static const _NoObjectPassedBackgroundDrawable instance =
       _NoObjectPassedBackgroundDrawable._();
 
   /// Private constructor.

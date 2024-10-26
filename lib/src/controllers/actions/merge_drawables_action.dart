@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../drawables/grouped_drawable.dart';
 
 import '../drawables/drawable.dart';
+import 'package:uuid/uuid.dart';
 
 import '../painter_controller.dart';
 import 'action.dart';
@@ -25,8 +26,8 @@ class MergeDrawablesAction extends ControllerAction<void, void> {
     final value = controller.value;
 
     final currentDrawables = List<Drawable>.from(value.drawables);
-    final groupedDrawable = GroupedDrawable(
-        id: UniqueKey().toString(), drawables: currentDrawables);
+    final groupedDrawable =
+        GroupedDrawable(id: const Uuid().v4(), drawables: currentDrawables);
     controller.value = value.copyWith(
       drawables: [groupedDrawable],
     );

@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
+import 'package:uuid/uuid.dart';
 
 import '../drawables/shape/oval_drawable.dart';
 import 'shape_factory.dart';
@@ -14,7 +14,7 @@ class OvalFactory extends ShapeFactory<OvalDrawable> {
   @override
   OvalDrawable create(Offset position, [Paint? paint]) {
     return OvalDrawable(
-        id: UniqueKey().toString(),
+        id: const Uuid().v4(),
         size: Size.zero,
         position: position,
         paint: paint);

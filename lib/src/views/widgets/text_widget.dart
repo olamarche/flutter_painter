@@ -92,7 +92,7 @@ class _TextWidgetState extends State<_TextWidget> {
 
     // Create a new hidden empty entry in the center of the painter
     final drawable = TextDrawable(
-      id: UniqueKey().toString(),
+      id: const Uuid().v4(),
       text: '',
       position: center,
       style: settings.textStyle,

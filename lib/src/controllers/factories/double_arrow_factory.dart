@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
+import 'package:uuid/uuid.dart';
 
 import '../drawables/shape/double_arrow_drawable.dart';
 import 'shape_factory.dart';
@@ -17,7 +18,7 @@ class DoubleArrowFactory extends ShapeFactory<DoubleArrowDrawable> {
   @override
   DoubleArrowDrawable create(Offset position, [Paint? paint]) {
     return DoubleArrowDrawable(
-        id: UniqueKey().toString(),
+        id: const Uuid().v4(),
         length: 0,
         position: position,
         paint: paint,

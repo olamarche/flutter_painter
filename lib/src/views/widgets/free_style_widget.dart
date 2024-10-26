@@ -60,7 +60,7 @@ class _FreeStyleWidgetState extends State<_FreeStyleWidget> {
     final PathDrawable drawable;
     if (settings.mode == FreeStyleMode.draw) {
       drawable = FreeStyleDrawable(
-        id: UniqueKey().toString(),
+        id: const Uuid().v4(),
         path: [_globalToLocal(globalPosition)],
         color: settings.color,
         strokeWidth: settings.strokeWidth,
@@ -70,7 +70,7 @@ class _FreeStyleWidgetState extends State<_FreeStyleWidget> {
       PainterController.of(context).addDrawables([drawable]);
     } else if (settings.mode == FreeStyleMode.erase) {
       drawable = EraseDrawable(
-        id: UniqueKey().toString(),
+        id: const Uuid().v4(),
         path: [_globalToLocal(globalPosition)],
         strokeWidth: settings.strokeWidth,
       );

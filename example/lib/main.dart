@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_painter/flutter_painter.dart';
+import 'package:uuid/uuid.dart';
 
 import 'dart:ui' as ui;
 
@@ -112,7 +113,7 @@ class _FlutterPainterExampleState extends State<FlutterPainterExample> {
     setState(() {
       backgroundImage = image;
       controller.background = image.backgroundDrawable(
-        id: UniqueKey().toString(),
+        id: const Uuid().v4(),
       );
     });
   }
