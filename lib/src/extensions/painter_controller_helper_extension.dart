@@ -205,9 +205,6 @@ extension PainterControllerHelper on PainterController {
   /// that they need to update (it calls [notifyListeners]). For this reason,
   /// this value should only be set between frames, e.g. in response to user
   /// actions, not during the build, layout, or paint phases.
-  set textStyle(TextStyle textStyle) => value = value.copyWith(
-      settings: value.settings
-          .copyWith(text: value.settings.text.copyWith(textStyle: textStyle)));
 
   set textAlign(TextAlign textAlign) => value = value.copyWith(
       settings: value.settings

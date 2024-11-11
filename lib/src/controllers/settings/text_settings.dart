@@ -3,35 +3,59 @@ import 'package:flutter/material.dart';
 /// Represents settings used to create and draw text.
 @immutable
 class TextSettings {
-  /// The text style to be used.
-  final TextStyle textStyle;
-
-  /// The text align to be used.
+  final double fontSize;
+  final Color color;
+  final FontWeight fontWeight;
+  final String? fontFamily;
   final TextAlign textAlign;
+  final Color? backgroundColor;
+  final EdgeInsets? padding;
+  final BorderRadius? borderRadius;
+  final Border? border;
+  final FocusNode? focusNode; // Keep FocusNode but make it optional
 
-  /// Focus node used to edit text.
-  /// This focus node will be listened to by the UI to determine user input.
-  ///
-  /// If a node is not provided, one will be used by default.
-  /// However, you won't be able to listen to changes in user input focus.
-  final FocusNode? focusNode;
-
-  /// Creates a [TextSettings] with the given [textStyle] and [focusNode].
   const TextSettings({
-    this.textStyle = const TextStyle(
-      fontSize: 14,
-      color: Colors.black,
-    ),
+    this.fontSize = 14,
+    this.color = Colors.black,
+    this.fontWeight = FontWeight.normal,
+    this.fontFamily,
     this.textAlign = TextAlign.center,
+    this.backgroundColor,
+    this.padding,
+    this.borderRadius,
+    this.border,
     this.focusNode,
   });
 
-  /// Creates a copy of this but with the given fields replaced with the new values.
-  TextSettings copyWith(
-      {TextStyle? textStyle, TextAlign? textAlign, FocusNode? focusNode}) {
+  TextStyle get textStyle => TextStyle(
+        fontSize: fontSize,
+        color: color,
+        fontWeight: fontWeight,
+        fontFamily: fontFamily,
+      );
+
+  TextSettings copyWith({
+    double? fontSize,
+    Color? color,
+    FontWeight? fontWeight,
+    String? fontFamily,
+    TextAlign? textAlign,
+    Color? backgroundColor,
+    EdgeInsets? padding,
+    BorderRadius? borderRadius,
+    Border? border,
+    FocusNode? focusNode,
+  }) {
     return TextSettings(
-        textStyle: textStyle ?? this.textStyle,
-        textAlign: textAlign ?? this.textAlign,
-        focusNode: focusNode ?? this.focusNode);
+      fontSize: fontSize ?? this.fontSize,
+      color: color ?? this.color,
+      fontWeight: fontWeight ?? this.fontWeight,
+      fontFamily: fontFamily ?? this.fontFamily,
+      textAlign: textAlign ?? this.textAlign,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      padding: padding ?? this.padding,
+      borderRadius: borderRadius ?? this.borderRadius,
+      border: border ?? this.border,
+    );
   }
 }

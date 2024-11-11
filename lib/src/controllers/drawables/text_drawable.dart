@@ -1,145 +1,135 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_painter/src/controllers/settings/text_settings.dart';
 
 import 'object_drawable.dart';
 
 /// Text Drawable
 class TextDrawable extends ObjectDrawable {
-  /// The text to be drawn.
   final String text;
-
-  /// The style the text will be drawn with.
-  final TextStyle style;
-
-  /// The direction of the text to be drawn.
+  final TextSettings textSettings;
   final TextDirection direction;
 
-  /// The align of the text.
-  final TextAlign textAlign;
-
   // A text painter which will paint the text on the canvas.
-  final TextPainter textPainter;
+  late final TextPainter textPainter;
 
-  /// Creates a [TextDrawable] to draw [text].
-  ///
-  /// The path will be drawn with the passed [style] if provided.
   TextDrawable({
     required String id,
     required this.text,
     required Offset position,
+    required this.textSettings,
+    this.direction = TextDirection.ltr,
     double rotation = 0,
     double scale = 1,
-    this.style = const TextStyle(
-      fontSize: 14,
-      color: Colors.black,
-    ),
-    this.direction = TextDirection.ltr,
-    this.textAlign = TextAlign.center,
     bool locked = false,
     bool hidden = false,
     Set<ObjectDrawableAssist> assists = const <ObjectDrawableAssist>{},
-  })  : textPainter = TextPainter(
-          text: TextSpan(text: text, style: style),
-          textAlign: textAlign,
-          textScaleFactor: scale,
-          textDirection: direction,
-        ),
-        super(
-            id: id,
-            position: position,
-            rotationAngle: rotation,
-            scale: scale,
-            assists: assists,
-            locked: locked,
-            hidden: hidden);
+  }) : super(
+          id: id,
+          position: position,
+          rotationAngle: rotation,
+          scale: scale,
+          assists: assists,
+          locked: locked,
+          hidden: hidden,
+        ) {
+    _initTextPainter();
+  }
 
-  /// Draws the text on the provided [canvas] of size [size].
+  void _initTextPainter() {
+    textPainter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: textSettings.textStyle,
+      ),
+      textAlign: textSettings.textAlign,
+      textDirection: direction,
+      textScaleFactor: scale,
+    );
+  }
+
   @override
   void drawObject(Canvas canvas, Size size) {
-    print('Drawing text: $text');
-    print('Position: $position');
-    print('Scale: $scale');
-    print('Style: $style');
-    print('Text align: $textAlign');
-    print('Direction: $direction');
+    // Draw container background if specified
+    if (textSettings.backgroundColor != null || textSettings.border != null) {
+      final Paint backgroundPaint = Paint()
+        ..color = textSettings.backgroundColor ?? Colors.transparent;
 
-    // Update the text painter before drawing
+      final textSize = getSize(maxWidth: size.width * scale);
+      final paddingToUse = textSettings.padding ?? EdgeInsets.zero;
+      final rect = Rect.fromCenter(
+        center: position,
+        width: textSize.width + paddingToUse.horizontal,
+        height: textSize.height + paddingToUse.vertical,
+      );
+
+      final RRect rrect =
+          (textSettings.borderRadius ?? BorderRadius.zero).toRRect(rect);
+
+      // Draw background
+      canvas.drawRRect(rrect, backgroundPaint);
+
+      // Draw border if specified
+      if (textSettings.border != null) {
+        textSettings.border!
+            .paint(canvas, rect, borderRadius: textSettings.borderRadius);
+      }
+    }
+
+    // Update and draw text
     _updateTextPainter();
-    // Render the text according to the size of the canvas taking the scale in mind
     textPainter.layout(maxWidth: size.width * scale);
-    // textPainter.layout(maxWidth: size.width * scale, textAlign: textAlign);
 
-    print('Text painter width: ${textPainter.width}');
-    print('Text painter height: ${textPainter.height}');
+    // Apply padding offset if specified
+    final Offset paddingOffset = textSettings.padding != null
+        ? Offset(textSettings.padding!.left - textSettings.padding!.right,
+                textSettings.padding!.top - textSettings.padding!.bottom) /
+            2
+        : Offset.zero;
 
-    // Paint the text on the canvas
-    // It is shifted back by half of its width and height to be drawn in the center
-    textPainter.paint(canvas,
-        position - Offset(textPainter.width / 2, textPainter.height / 2));
+    textPainter.paint(
+      canvas,
+      position -
+          Offset(textPainter.width / 2, textPainter.height / 2) +
+          paddingOffset,
+    );
   }
 
   void _updateTextPainter() {
-    print('Updating text painter');
-    textPainter.text = TextSpan(text: text, style: style);
+    textPainter.text = TextSpan(text: text, style: textSettings.textStyle);
+    textPainter.textAlign = textSettings.textAlign;
     textPainter.textDirection = direction;
-    textPainter.textAlign = textAlign;
   }
 
-  /// Creates a copy of this but with the given fields replaced with the new values.
   @override
   TextDrawable copyWith({
     String? id,
-    bool? hidden,
-    Set<ObjectDrawableAssist>? assists,
     String? text,
     Offset? position,
+    TextSettings? textSettings,
+    TextDirection? direction,
     double? rotation,
     double? scale,
-    TextStyle? style,
     bool? locked,
-    TextDirection? direction,
-    TextAlign? textAlign,
+    bool? hidden,
+    Set<ObjectDrawableAssist>? assists,
   }) {
     return TextDrawable(
       id: id ?? this.id,
       text: text ?? this.text,
       position: position ?? this.position,
+      textSettings: textSettings ?? this.textSettings,
+      direction: direction ?? this.direction,
       rotation: rotation ?? rotationAngle,
       scale: scale ?? this.scale,
-      style: style ?? this.style,
-      direction: direction ?? this.direction,
-      textAlign: textAlign ?? this.textAlign,
-      assists: assists ?? this.assists,
-      hidden: hidden ?? this.hidden,
       locked: locked ?? this.locked,
+      hidden: hidden ?? this.hidden,
+      assists: assists ?? this.assists,
     );
   }
 
-  /// Calculates the size of the rendered object.
   @override
   Size getSize({double minWidth = 0.0, double maxWidth = double.infinity}) {
-    // Generate the text as a visual layout
     textPainter.layout(minWidth: minWidth, maxWidth: maxWidth * scale);
     return textPainter.size;
   }
-
-  /// Compares two [TextDrawable]s for equality.
-  // @override
-  // bool operator ==(Object other) {
-  //   return other is TextDrawable &&
-  //       super == other &&
-  //       other.text == text &&
-  //       other.style == style &&
-  //       other.direction == direction;
-  // }
-  //
-  // @override
-  // int get hashCode => hashValues(
-  //     hidden,
-  //     hashList(assists),
-  //     hashList(assistPaints.entries),
-  //     position,
-  //     rotationAngle,
-  //     scale,
-  //     style,
-  //     direction);
 }

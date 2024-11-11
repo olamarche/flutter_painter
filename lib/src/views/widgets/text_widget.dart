@@ -95,7 +95,17 @@ class _TextWidgetState extends State<_TextWidget> {
       id: const Uuid().v4(),
       text: '',
       position: center,
-      style: settings.textStyle,
+      textSettings: TextSettings(
+        fontSize: 20,
+        color: settings.color,
+        fontWeight: settings.fontWeight,
+        fontFamily: settings.fontFamily,
+        textAlign: settings.textAlign,
+        backgroundColor: settings.backgroundColor,
+        padding: settings.padding,
+        borderRadius: settings.borderRadius,
+        border: settings.border,
+      ),
       hidden: true,
     );
     PainterController.of(context).addDrawables([drawable]);
@@ -188,21 +198,16 @@ class EditTextWidgetState extends State<EditTextWidget>
   void initState() {
     super.initState();
 
-    // Initialize the focus node
-    textFieldNode = settings.focusNode ?? FocusNode();
+    textEditingController = TextEditingController(text: widget.drawable.text);
+    // Use the FocusNode from settings if available, otherwise create a new one
+    textFieldNode =
+        widget.controller.value.settings.text.focusNode ?? FocusNode();
     textFieldNode.addListener(focusListener);
 
-    // Requests focus for the focus node after the first frame is rendered
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       textFieldNode.requestFocus();
     });
 
-    // Initialize the text in the [TextField] to the drawable text
-    textEditingController.text = widget.drawable.text;
-
-    // Add this object as an observer for widget bindings
-    //
-    // This is used to check the bottom view insets (the keyboard size on mobile)
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -326,7 +331,17 @@ class EditTextWidgetState extends State<EditTextWidget>
       final drawable = widget.drawable.copyWith(
         id: const Uuid().v4(),
         text: text, // Make sure we're using the text from the controller
-        style: settings.textStyle,
+        textSettings: TextSettings(
+          fontSize: 20,
+          color: settings.color,
+          fontWeight: settings.fontWeight,
+          fontFamily: settings.fontFamily,
+          textAlign: settings.textAlign,
+          backgroundColor: settings.backgroundColor,
+          padding: settings.padding,
+          borderRadius: settings.borderRadius,
+          border: settings.border,
+        ),
         hidden: false,
       );
 
