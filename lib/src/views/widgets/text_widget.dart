@@ -314,11 +314,13 @@ class EditTextWidgetState extends State<EditTextWidget>
 
       // Create new drawable with the current text
       final drawable = widget.drawable.copyWith(
+        id: const Uuid().v4(),
         text: text, // Make sure we're using the text from the controller
         style: settings.textStyle,
         hidden: false,
       );
 
+      print(drawable);
       // Update the drawable in the controller
       updateDrawable(widget.drawable, drawable);
 
@@ -337,6 +339,8 @@ class EditTextWidgetState extends State<EditTextWidget>
 
   /// Updates the drawable in the painter controller.
   void updateDrawable(TextDrawable oldDrawable, TextDrawable newDrawable) {
+    print(oldDrawable);
+    print(newDrawable);
     widget.controller
         .replaceDrawable(oldDrawable, newDrawable, newAction: !widget.isNew);
   }
