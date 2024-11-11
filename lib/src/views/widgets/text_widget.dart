@@ -240,16 +240,29 @@ class EditTextWidgetState extends State<EditTextWidget>
       // If the border is tapped, un-focus the text field
       onTap: () => textFieldNode.unfocus(),
       child: Container(
-        color: Colors.black38,
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+        ),
         child: Padding(
           padding: EdgeInsets.only(
               bottom: (keyboardHeight - (screenHeight - height - y))
-                  .clamp(0, screenHeight)),
+                  .clamp(0, screenHeight),
+              left: 16,
+              right: 16,
+              top: 8),
           child: Center(
             child: TextField(
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4),
+                  borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+                ),
+                filled: true,
+                fillColor: Colors.white.withOpacity(0.1),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 isDense: true,
               ),
               cursorColor: Colors.white,
