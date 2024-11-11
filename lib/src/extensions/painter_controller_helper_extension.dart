@@ -69,10 +69,27 @@ extension PainterControllerHelper on PainterController {
   /// that they need to update (it calls [notifyListeners]). For this reason,
   /// this value should only be set between frames, e.g. in response to user
   /// actions, not during the build, layout, or paint phases.
-  set textSettings(TextSettings textSettings) => value = value.copyWith(
-          settings: settings.copyWith(
+  set textSettings(TextSettings textSettings) {
+    // Update global settings
+    value = value.copyWith(
+      settings: value.settings.copyWith(
         text: textSettings,
-      ));
+      ),
+    );
+
+    // Update all existing text drawables with new settings
+    final updatedDrawables = value.drawables.map((drawable) {
+      if (drawable is TextDrawable) {
+        return drawable.copyWith(
+          textSettings: textSettings,
+        );
+      }
+      return drawable;
+    }).toList();
+
+    // Update the drawables in the controller
+    value = value.copyWith(drawables: updatedDrawables);
+  }
 
   /// The free-style settings directly from the painter settings.
   ///
