@@ -55,6 +55,8 @@ class TextDrawable extends ObjectDrawable {
   /// Draws the text on the provided [canvas] of size [size].
   @override
   void drawObject(Canvas canvas, Size size) {
+    // Update the text painter before drawing
+    _updateTextPainter();
     // Render the text according to the size of the canvas taking the scale in mind
     textPainter.layout(maxWidth: size.width * scale);
     // textPainter.layout(maxWidth: size.width * scale, textAlign: textAlign);
@@ -63,6 +65,12 @@ class TextDrawable extends ObjectDrawable {
     // It is shifted back by half of its width and height to be drawn in the center
     textPainter.paint(canvas,
         position - Offset(textPainter.width / 2, textPainter.height / 2));
+  }
+
+  void _updateTextPainter() {
+    textPainter.text = TextSpan(text: text, style: style);
+    textPainter.textDirection = direction;
+    textPainter.textAlign = textAlign;
   }
 
   /// Creates a copy of this but with the given fields replaced with the new values.
