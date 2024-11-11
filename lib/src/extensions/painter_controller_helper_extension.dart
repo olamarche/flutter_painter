@@ -78,31 +78,29 @@ extension PainterControllerHelper on PainterController {
       ),
     );
 
-    // Update all existing text drawables with new settings
-    final List<Drawable> updatedDrawables = [];
+    // Only update the selected text drawable if there is one
+    final selectedDrawable = value.selectedObjectDrawable;
+    if (selectedDrawable is TextDrawable) {
+      final updatedDrawable = TextDrawable(
+        id: const Uuid().v4(), // Generate new ID to force redraw
+        text: selectedDrawable.text,
+        position: selectedDrawable.position,
+        textSettings: textSettings,
+        rotation: selectedDrawable.rotationAngle,
+        scale: selectedDrawable.scale,
+        locked: selectedDrawable.locked,
+        hidden: selectedDrawable.hidden,
+        assists: selectedDrawable.assists,
+      );
 
-    for (final drawable in value.drawables) {
-      if (drawable is TextDrawable) {
-        // Create new drawable with updated settings but preserve existing text and position
-        final updatedDrawable = TextDrawable(
-          id: const Uuid().v4(), // Generate new ID to force redraw
-          text: drawable.text,
-          position: drawable.position,
-          textSettings: textSettings,
-          rotation: drawable.rotationAngle,
-          scale: drawable.scale,
-          locked: drawable.locked,
-          hidden: drawable.hidden,
-          assists: drawable.assists,
-        );
-        updatedDrawables.add(updatedDrawable);
-      } else {
-        updatedDrawables.add(drawable);
+      // Replace just the selected drawable
+      final drawables = [...value.drawables];
+      final index = drawables.indexOf(selectedDrawable);
+      if (index != -1) {
+        drawables[index] = updatedDrawable;
+        replaceDrawables(drawables);
       }
     }
-
-    // Force update by replacing all drawables
-    replaceDrawables(updatedDrawables);
   }
 
 // Add this helper method if it doesn't exist
