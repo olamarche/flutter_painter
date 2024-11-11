@@ -55,11 +55,21 @@ class TextDrawable extends ObjectDrawable {
   /// Draws the text on the provided [canvas] of size [size].
   @override
   void drawObject(Canvas canvas, Size size) {
+    print('Drawing text: $text');
+    print('Position: $position');
+    print('Scale: $scale');
+    print('Style: $style');
+    print('Text align: $textAlign');
+    print('Direction: $direction');
+
     // Update the text painter before drawing
     _updateTextPainter();
     // Render the text according to the size of the canvas taking the scale in mind
     textPainter.layout(maxWidth: size.width * scale);
     // textPainter.layout(maxWidth: size.width * scale, textAlign: textAlign);
+
+    print('Text painter width: ${textPainter.width}');
+    print('Text painter height: ${textPainter.height}');
 
     // Paint the text on the canvas
     // It is shifted back by half of its width and height to be drawn in the center
@@ -68,6 +78,7 @@ class TextDrawable extends ObjectDrawable {
   }
 
   void _updateTextPainter() {
+    print('Updating text painter');
     textPainter.text = TextSpan(text: text, style: style);
     textPainter.textDirection = direction;
     textPainter.textAlign = textAlign;
