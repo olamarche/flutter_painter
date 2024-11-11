@@ -302,25 +302,35 @@ class EditTextWidgetState extends State<EditTextWidget>
   ///
   /// If the text is empty, it will remove the drawable from the controller.
   void onEditingComplete() {
-    if (textEditingController.text.trim().isEmpty) {
+    final text = textEditingController.text.trim();
+    print(text);
+    if (text.isEmpty) {
       widget.controller.removeDrawable(widget.drawable);
       if (!widget.isNew) {
         DrawableDeletedNotification(widget.drawable).dispatch(context);
       }
     } else {
+      print(settings.textStyle);
+
+      // Create new drawable with the current text
       final drawable = widget.drawable.copyWith(
-        text: textEditingController.text.trim(),
+        text: text, // Make sure we're using the text from the controller
         style: settings.textStyle,
         hidden: false,
       );
+
+      // Update the drawable in the controller
       updateDrawable(widget.drawable, drawable);
-      if (widget.isNew) DrawableCreatedNotification(drawable).dispatch(context);
+
+      if (widget.isNew) {
+        DrawableCreatedNotification(drawable).dispatch(context);
+      }
     }
+
     if (mounted && !disposed) {
       setState(() {
         disposed = true;
       });
-
       Navigator.pop(context);
     }
   }
