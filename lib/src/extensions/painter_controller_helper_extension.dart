@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:uuid/uuid.dart';
 import '../controllers/factories/shape_factory.dart';
 
 import '../controllers/painter_controller.dart';
@@ -78,17 +79,35 @@ extension PainterControllerHelper on PainterController {
     );
 
     // Update all existing text drawables with new settings
-    final updatedDrawables = value.drawables.map((drawable) {
-      if (drawable is TextDrawable) {
-        return drawable.copyWith(
-          textSettings: textSettings,
-        );
-      }
-      return drawable;
-    }).toList();
+    final List<Drawable> updatedDrawables = [];
 
-    // Update the drawables in the controller
-    value = value.copyWith(drawables: updatedDrawables);
+    for (final drawable in value.drawables) {
+      if (drawable is TextDrawable) {
+        // Create new drawable with updated settings but preserve existing text and position
+        final updatedDrawable = TextDrawable(
+          id: const Uuid().v4(), // Generate new ID to force redraw
+          text: drawable.text,
+          position: drawable.position,
+          textSettings: textSettings,
+          rotation: drawable.rotationAngle,
+          scale: drawable.scale,
+          locked: drawable.locked,
+          hidden: drawable.hidden,
+          assists: drawable.assists,
+        );
+        updatedDrawables.add(updatedDrawable);
+      } else {
+        updatedDrawables.add(drawable);
+      }
+    }
+
+    // Force update by replacing all drawables
+    replaceDrawables(updatedDrawables);
+  }
+
+// Add this helper method if it doesn't exist
+  void replaceDrawables(List<Drawable> newDrawables) {
+    value = value.copyWith(drawables: newDrawables);
   }
 
   /// The free-style settings directly from the painter settings.
