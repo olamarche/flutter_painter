@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
 import '../drawables/shape/double_arrow_drawable.dart';

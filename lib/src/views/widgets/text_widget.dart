@@ -246,16 +246,16 @@ class EditTextWidgetState extends State<EditTextWidget>
       onTap: () => textFieldNode.unfocus(),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.1),
+          color: Colors.black.withOpacity(0.2),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+          border: Border.all(color: Colors.white.withOpacity(0.5), width: 1),
         ),
         child: Padding(
           padding: EdgeInsets.only(
               bottom: (keyboardHeight - (screenHeight - height - y))
                   .clamp(0, screenHeight),
-              left: 16,
-              right: 16,
+              left: 64,
+              right: 64,
               top: 8),
           child: Center(
             child: TextField(

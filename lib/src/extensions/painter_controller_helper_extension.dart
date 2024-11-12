@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:uuid/uuid.dart';
 import '../controllers/factories/shape_factory.dart';
 
 import '../controllers/painter_controller.dart';
@@ -33,6 +32,85 @@ extension PainterControllerHelper on PainterController {
 
   /// The scale settings directly from the painter settings.
   ScaleSettings get scaleSettings => settings.scale;
+
+  void _updateSelectedTextDrawable(TextSettings Function(TextSettings) update) {
+    final selectedDrawable = value.selectedObjectDrawable;
+    if (selectedDrawable is TextDrawable) {
+      final updatedDrawable = selectedDrawable.copyWith(
+        textSettings: update(selectedDrawable.textSettings),
+      );
+
+      final drawables = [...value.drawables];
+      final index = drawables.indexOf(selectedDrawable);
+      if (index != -1) {
+        drawables[index] = updatedDrawable;
+        replaceDrawables(drawables);
+      }
+    }
+  }
+
+  // Text color
+  set textColor(Color color) {
+    _updateSelectedTextDrawable(
+      (settings) => settings.copyWith(color: color),
+    );
+  }
+
+  // Font size
+  set fontSize(double size) {
+    _updateSelectedTextDrawable(
+      (settings) => settings.copyWith(fontSize: size),
+    );
+  }
+
+  // Font weight
+  set fontWeight(FontWeight weight) {
+    _updateSelectedTextDrawable(
+      (settings) => settings.copyWith(fontWeight: weight),
+    );
+  }
+
+  // Font family
+  set fontFamily(String? family) {
+    _updateSelectedTextDrawable(
+      (settings) => settings.copyWith(fontFamily: family),
+    );
+  }
+
+  // Text alignment
+  set textAlign(TextAlign align) {
+    _updateSelectedTextDrawable(
+      (settings) => settings.copyWith(textAlign: align),
+    );
+  }
+
+  // Background color
+  set textBackgroundColor(Color? color) {
+    _updateSelectedTextDrawable(
+      (settings) => settings.copyWith(backgroundColor: color),
+    );
+  }
+
+  // Padding
+  set textPadding(EdgeInsets? padding) {
+    _updateSelectedTextDrawable(
+      (settings) => settings.copyWith(padding: padding),
+    );
+  }
+
+  // Border radius
+  set textBorderRadius(BorderRadius? radius) {
+    _updateSelectedTextDrawable(
+      (settings) => settings.copyWith(borderRadius: radius),
+    );
+  }
+
+  // Border
+  set textBorder(Border? border) {
+    _updateSelectedTextDrawable(
+      (settings) => settings.copyWith(border: border),
+    );
+  }
 
   /// The current painter settings directly from `value`.
   ///
@@ -70,12 +148,10 @@ extension PainterControllerHelper on PainterController {
   /// that they need to update (it calls [notifyListeners]). For this reason,
   /// this value should only be set between frames, e.g. in response to user
   /// actions, not during the build, layout, or paint phases.
-  set textSettings(TextSettings textSettings) {
-    // Update global settings
-    value = value.copyWith(
-      settings: value.settings.copyWith(
-        text: textSettings,
-      ),
+  // Update all text settings at once
+  set textSettings(TextSettings settings) {
+    _updateSelectedTextDrawable(
+      (_) => settings,
     );
   }
 
@@ -216,9 +292,9 @@ extension PainterControllerHelper on PainterController {
   /// this value should only be set between frames, e.g. in response to user
   /// actions, not during the build, layout, or paint phases.
 
-  set textAlign(TextAlign textAlign) => value = value.copyWith(
-      settings: value.settings
-          .copyWith(text: value.settings.text.copyWith(textAlign: textAlign)));
+  // set textAlign(TextAlign textAlign) => value = value.copyWith(
+  //     settings: value.settings
+  //         .copyWith(text: value.settings.text.copyWith(textAlign: textAlign)));
 
   /// The focus node used to edit text drawables text from `value.settings.text` directly.
   ///
