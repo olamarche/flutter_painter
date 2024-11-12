@@ -37,6 +37,7 @@ extension PainterControllerHelper on PainterController {
     final selectedDrawable = value.selectedObjectDrawable;
     if (selectedDrawable is TextDrawable) {
       final updatedDrawable = selectedDrawable.copyWith(
+        id: selectedDrawable.id, // Keep the same ID to maintain selection
         textSettings: update(selectedDrawable.textSettings),
       );
 
