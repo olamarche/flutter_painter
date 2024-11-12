@@ -42,6 +42,11 @@ extension PainterControllerHelper on PainterController {
       );
 
       final drawables = [...value.drawables];
+      final index = drawables.indexOf(selectedDrawable);
+      if (index != -1) {
+        drawables[index] = updatedDrawable;
+        replaceDrawables(drawables);
+      }
 
       value = value.copyWith(
         drawables: drawables,
